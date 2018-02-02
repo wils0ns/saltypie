@@ -8,7 +8,6 @@ Installing package.
 ~~~~~~~~~~~~~~~~~~~~~~
 
 .. code-block:: bash
-
     pip install saltypie
 
 
