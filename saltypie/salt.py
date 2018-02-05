@@ -4,7 +4,10 @@ import sys
 import json
 import logging
 import time
-from urllib.parse import urljoin
+try:
+    from urlparse import urljoin
+except ImportError:
+    from urllib.parse import urljoin
 
 import requests
 from requests.adapters import HTTPAdapter
