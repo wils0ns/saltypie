@@ -1,13 +1,17 @@
 from saltypie import Salt
+import logging
 
-salt = Salt('https://163.185.10.104:8000', username='drillops-cm', passwd='removeme')
+LOG = logging.getLogger()
+logging.basicConfig(level=logging.DEBUG)
 
+salt = Salt()
+salt.eauth = 'ldap'
 ret = salt.execute(
     client=Salt.CLIENT_LOCAL,
     target='*local-cm',
-    fun='coda_node.start_commission',
+    fun='test.ping',
     # options: node_id, ip or role
-    args=['', '', 'containers-pc'],
+    # args=['', '', 'containers-pc'],
     # kwargs={'role': 'containers-pc'}
 )
 

@@ -26,7 +26,7 @@ class Salt(object):
     OUTPUT_JSON = 'json'
     OUTPUT_DICT = 'dict'
 
-    def __init__(self, url=None, username=None, passwd=None):
+    def __init__(self, url=None, username=None, passwd=None, eauth='pam'):
         """
         Salt's Rest API handler
 
@@ -34,15 +34,17 @@ class Salt(object):
             url (str): Salt API web server URL
             username (str): The username to be used to authenticate to the salt-api
             passwd: The password to be used to authenticate to the salt-api
+            eauth: External authentication method.
         """
         self.url = url
         self.username = username
         self.password = passwd
+        self.eauth = eauth
         self.token = None
         self.timeout = 60
         self.session = self._new_session()
         self.lookup_interval = 1
-        self.max_retries_if_aborted = 3
+        self.max_retries_if_aborted = 3        
 
         self.log = logging.getLogger(__name__)
 
@@ -128,18 +130,22 @@ class Salt(object):
                 else:
                     exit(1)
 
-    def login(self):
+    def login(self, eauth=None):
         """
         Creates an authenticated session with a salt API server
+
+        Args:
+            eauth (str): External authentication method. 
 
         Returns:
 
         """
-        self.log.debug('Authenticating to salt-api...')
+        eauth = eauth or self.eauth
+        self.log.debug('Authenticating to salt-api using `{}` external authentication...'.format(eauth))
         data = {
             'username': self.username,
             'password': self.password,
-            'eauth': 'pam'
+            'eauth': eauth
         }
 
         try:
