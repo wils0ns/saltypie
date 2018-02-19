@@ -1,4 +1,4 @@
-mage: alpine
+image: alpine
 
 pages:
   script:
@@ -9,6 +9,6 @@ pages:
     - mv docs/build/html/ public/
   artifacts:
     paths:
-    - public
+      - public
   only:
-  - master
+    - master
