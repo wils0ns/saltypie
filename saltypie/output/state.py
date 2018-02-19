@@ -7,8 +7,11 @@ from terminaltables import AsciiTable, SingleTable
 
 colorama.init()
 
-if sys.stdout.encoding == 'utf-8':
-    Windows.enable(auto_colors=True, reset_atexit=True)
+try:
+    if sys.stdout.encoding == 'utf-8':
+        Windows.enable(auto_colors=True, reset_atexit=True)
+except AttributeError as e:
+    pass
 
 
 class StateOutput:
@@ -66,7 +69,7 @@ class StateOutput:
             key (str): The state key from which to extract the state name
 
         Returns:
-
+            str: The state name
         """
         return key.split('_|-')[1]
 
