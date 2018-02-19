@@ -1,0 +1,255 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+        <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>saltypie.Salt &#8212; saltypie  documentation</title>
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript" src="_static/documentation_options.js"></script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="saltypie.output.StateOutput" href="state_output.html" />
+    <link rel="prev" title="saltypie’s documentation!" href="index.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="module-saltypie.salt">
+<span id="saltypie-salt"></span><h1>saltypie.Salt<a class="headerlink" href="#module-saltypie.salt" title="Permalink to this headline">¶</a></h1>
+<dl class="class">
+<dt id="saltypie.salt.Salt">
+<em class="property">class </em><code class="descclassname">saltypie.salt.</code><code class="descname">Salt</code><span class="sig-paren">(</span><em>url=None</em>, <em>username=None</em>, <em>passwd=None</em>, <em>eauth='pam'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/saltypie/salt.html#Salt"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#saltypie.salt.Salt" title="Permalink to this definition">¶</a></dt>
+<dd><p>Salt Rest API Handler</p>
+<dl class="method">
+<dt id="saltypie.salt.Salt.execute">
+<code class="descname">execute</code><span class="sig-paren">(</span><em>fun</em>, <em>client=None</em>, <em>target=None</em>, <em>args=None</em>, <em>kwargs=None</em>, <em>pillar=None</em>, <em>async=False</em>, <em>async_wait=False</em>, <em>output='dict'</em>, <em>returner=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/saltypie/salt.html#Salt.execute"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#saltypie.salt.Salt.execute" title="Permalink to this definition">¶</a></dt>
+<dd><p>Executes a function using the salt API.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>fun</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.6)"><em>str</em></a>) – Name of the function to be executed</li>
+<li><strong>client</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.6)"><em>str</em></a>) – Type of client to use (local, runner or wheel).
+If not specified, the <cite>local</cite> client will be used.</li>
+<li><strong>target</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.6)"><em>str</em></a>) – The minions that should execute this function.
+If the client is not set to <cite>local</cite>, this parameter will be ignored.</li>
+<li><strong>args</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.6)"><em>list</em></a>) – List of arguments to be passed to the function.</li>
+<li><strong>kwargs</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.6)"><em>dict</em></a>) – Dictionary of arguments to be passed to the function.</li>
+<li><strong>pillar</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.6)"><em>dict</em></a>) – Dictionary of pillar values to be passed to the function. Example: pillar={‘sleep’: 30}</li>
+<li><strong>async</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.6)"><em>bool</em></a>) – Whether or not to execute the function asynchronously.
+If set to <cite>True</cite>, it will return the job ID.
+If the client is set to <cite>wheel</cite>, this parameter wil be ignored.</li>
+<li><strong>async_wait</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.6)"><em>bool</em></a>) – If this parameter is set to <cite>True</cite>, it will use async clients, just like the <cite>async</cite>
+parameter would, but instead of returning the job ID, it will use it to keep pulling
+the job result until it is completed. It is basically the same as passing <cite>async=True</cite>
+and calling <cite>Salt.lookup_job</cite> with <cite>until_complete=True</cite>. Crazy right? But super useful
+for long run functions that you would like to wait for the return, but don’t want to
+be vulnerable to timeouts (You’re welcome.).</li>
+<li><strong>output</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.6)"><em>str</em></a>) – The output format of this method (See output constants specified in this class).</li>
+<li><strong>returner</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.6)"><em>str</em></a>) – Which salt returner to be passed to the function.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">Depends on the format passed to the <cite>output</cite> parameter.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.6)">str</a>, <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.6)">dict</a></p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="saltypie.salt.Salt.get">
+<code class="descname">get</code><span class="sig-paren">(</span><em>path</em>, <em>headers=None</em>, <em>timeout=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/saltypie/salt.html#Salt.get"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#saltypie.salt.Salt.get" title="Permalink to this definition">¶</a></dt>
+<dd><p>Executes URL calls using the GET method</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>path</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.6)"><em>str</em></a>) – Path to append to the URL</li>
+<li><strong>headers</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.6)"><em>dict</em></a>) – Extra headers to be passed to the GET call</li>
+<li><strong>timeout</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.6)"><em>int</em></a>) – The amount of seconds to wait before the request times out</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">requests.models.Response</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="saltypie.salt.Salt.highstate">
+<code class="descname">highstate</code><span class="sig-paren">(</span><em>target</em>, <em>output='dict'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/saltypie/salt.html#Salt.highstate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#saltypie.salt.Salt.highstate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Runs highstate on the target minion</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>target</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.6)"><em>str</em></a>) – The minion to run the highstate</li>
+<li><strong>output</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.6)"><em>str</em></a>) – The output format of this method (See output constants specified in this class).</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">Depends on the format passed to the <cite>output</cite> parameter.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.6)">str</a>, <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.6)">dict</a></p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="saltypie.salt.Salt.login">
+<code class="descname">login</code><span class="sig-paren">(</span><em>eauth=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/saltypie/salt.html#Salt.login"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#saltypie.salt.Salt.login" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates an authenticated session with a salt API server</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>eauth</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.6)"><em>str</em></a>) – External authentication method.</td>
+</tr>
+</tbody>
+</table>
+<p>Returns:</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="saltypie.salt.Salt.lookup_job">
+<code class="descname">lookup_job</code><span class="sig-paren">(</span><em>jid</em>, <em>until_complete=False</em>, <em>interval=None</em>, <em>output='dict'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/saltypie/salt.html#Salt.lookup_job"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#saltypie.salt.Salt.lookup_job" title="Permalink to this definition">¶</a></dt>
+<dd><p>Retrieves information about a saltstack job.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>jid</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.6)"><em>int</em></a>) – The job ID.</li>
+<li><strong>until_complete</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.6)"><em>bool</em></a>) – Whether or not to keep pulling the job until it is completed.</li>
+<li><strong>interval</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.6)"><em>int</em></a>) – Time interval (in seconds) to wait in between checks. If not specified, defaults will be used.
+You can also set the global lookup interval using <cite>self.lookup_interval</cite>.</li>
+<li><strong>output</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.6)"><em>str</em></a>) – The output format of this method (See output constants specified in this class).</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">a dictionary containing the job results</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.6)">dict</a></p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="saltypie.salt.Salt.post">
+<code class="descname">post</code><span class="sig-paren">(</span><em>data</em>, <em>path=''</em>, <em>headers=None</em>, <em>timeout=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/saltypie/salt.html#Salt.post"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#saltypie.salt.Salt.post" title="Permalink to this definition">¶</a></dt>
+<dd><p>Executes URL calls using the POST method</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>data</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.6)"><em>dict</em></a>) – The data to be passed to the POST call</li>
+<li><strong>path</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.6)"><em>str</em></a>) – The path to be appended to the URL</li>
+<li><strong>headers</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.6)"><em>dict</em></a>) – Extra headers to be passed to the POST call</li>
+<li><strong>timeout</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.6)"><em>int</em></a>) – The amount of seconds to wait before the request times out</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">requests.models.Response</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="saltypie.salt.Salt.versions">
+<code class="descname">versions</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/saltypie/salt.html#Salt.versions"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#saltypie.salt.Salt.versions" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the versions of salt running on master and its minions</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">dict</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h3><a href="index.html">Table Of Contents</a></h3>
+<p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">saltypie.Salt</a></li>
+<li class="toctree-l1"><a class="reference internal" href="state_output.html">saltypie.output.StateOutput</a></li>
+</ul>
+
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2018, Wilson Santos.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.7.0</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.10</a>
+      
+      |
+      <a href="_sources/salt.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

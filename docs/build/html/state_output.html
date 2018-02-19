@@ -1,0 +1,191 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+        <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>saltypie.output.StateOutput &#8212; saltypie  documentation</title>
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript" src="_static/documentation_options.js"></script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="prev" title="saltypie.Salt" href="salt.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="saltypie-output-stateoutput">
+<h1>saltypie.output.StateOutput<a class="headerlink" href="#saltypie-output-stateoutput" title="Permalink to this headline">¶</a></h1>
+<dl class="class">
+<dt id="saltypie.output.StateOutput">
+<em class="property">class </em><code class="descclassname">saltypie.output.</code><code class="descname">StateOutput</code><span class="sig-paren">(</span><em>ret</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/saltypie/output/state.html#StateOutput"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#saltypie.output.StateOutput" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="staticmethod">
+<dt id="saltypie.output.StateOutput.get_state_name">
+<em class="property">static </em><code class="descname">get_state_name</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/saltypie/output/state.html#StateOutput.get_state_name"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#saltypie.output.StateOutput.get_state_name" title="Permalink to this definition">¶</a></dt>
+<dd><p>Extracts a state name from salt’s <cite>state.apply</cite> naming pattern</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>key</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.6)"><em>str</em></a>) – The state key from which to extract the state name</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">The state name</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.6)">str</a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="saltypie.output.StateOutput.graphs">
+<code class="descname">graphs</code><span class="sig-paren">(</span><em>failed_only=False</em>, <em>max_chars=None</em>, <em>max_bar_size=30</em>, <em>safe=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/saltypie/output/state.html#StateOutput.graphs"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#saltypie.output.StateOutput.graphs" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates a list of tables representing the state run including a more graphical representation of the duration.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>failed_only</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.6)"><em>bool</em></a>) – Whether or not the tables should only contain the failed states</li>
+<li><strong>max_chars</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.6)"><em>int</em></a>) – Maximum number of characters to display for state ID.
+If the ID is greater then <cite>max_chars</cite> ellipsis(…) will be added.</li>
+<li><strong>max_bar_size</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.6)"><em>int</em></a>) – Size of the bar plot equivalent to 100% of the execution time.</li>
+<li><strong>safe</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.6)"><em>bool</em></a>) – If safe is set to <cite>True</cite>, the table will be created using features that are compatible with
+most terminals.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">list</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="saltypie.output.StateOutput.ordered_result">
+<code class="descname">ordered_result</code><span class="sig-paren">(</span><em>result</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/saltypie/output/state.html#StateOutput.ordered_result"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#saltypie.output.StateOutput.ordered_result" title="Permalink to this definition">¶</a></dt>
+<dd><p>Order states by run number</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>result</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.6)"><em>dict</em></a>) – The return object of a <cite>state.apply</cite> execution</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">OrderedDict</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="saltypie.output.StateOutput.summary">
+<code class="descname">summary</code><span class="sig-paren">(</span><em>max_chars=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/saltypie/output/state.html#StateOutput.summary"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#saltypie.output.StateOutput.summary" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a summary of a state run with more meaningful data like <cite>ID</cite>, <cite>duration</cite>, <cite>result</cite> and <cite>changes</cite>.
+ID: the state name extracted from the state key
+Duration: If a state did not run, its duration is set to zero
+Result: <cite>True</cite> or <cite>False</cite> for whether or not the state run successfully
+Changes: <cite>True</cite> or <cite>False</cite> for whether or not the state has made changes to the minion</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>max_chars</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.6)"><em>int</em></a>) – Maximum number of characters to display for state ID.
+If the ID is greater then <cite>max_chars</cite> ellipsis(…) will be added.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">dict</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="saltypie.output.StateOutput.tables">
+<code class="descname">tables</code><span class="sig-paren">(</span><em>failed_only=False</em>, <em>max_chars=None</em>, <em>safe=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/saltypie/output/state.html#StateOutput.tables"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#saltypie.output.StateOutput.tables" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates a list of tables representing the state run for which minion.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>failed_only</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.6)"><em>bool</em></a>) – Whether or not the tables should only contain the failed states</li>
+<li><strong>max_chars</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.6)"><em>int</em></a>) – Maximum number of characters to display for state ID.
+If the ID is greater then <cite>max_chars</cite> ellipsis(…) will be added.</li>
+<li><strong>safe</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.6)"><em>bool</em></a>) – If safe is set to <cite>True</cite>, the table will be created using features that are compatible with
+most terminals.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">list</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h3><a href="index.html">Table Of Contents</a></h3>
+<p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="salt.html">saltypie.Salt</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">saltypie.output.StateOutput</a></li>
+</ul>
+
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2018, Wilson Santos.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.7.0</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.10</a>
+      
+      |
+      <a href="_sources/state_output.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

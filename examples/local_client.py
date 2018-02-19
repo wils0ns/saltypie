@@ -1,4 +1,5 @@
 from saltypie import Salt
+from saltypie.output import StateOutput
 import logging
 
 LOG = logging.getLogger()

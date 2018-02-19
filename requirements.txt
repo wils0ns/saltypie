@@ -3,3 +3,7 @@ terminaltables
 colorclass
 colorama
 termcolor
+
+# doc build requirements
+sphinx
+recommonmark
