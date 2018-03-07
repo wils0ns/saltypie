@@ -55,7 +55,7 @@ class StateOutput:
                 try:
                     ordered[minion_id] = OrderedDict(
                         sorted(states.items(), key=lambda k: k[1]['__run_num__']))
-                except Exception as e:
+                except Exception:
                     self.log.error('Error: Unable to sort state results for {} minion'.format(minion_id))
                     self.log.error('State results: {}'.format(states))                    
                     exit(1)
@@ -90,7 +90,6 @@ class StateOutput:
             dict
         """
         ret = {}
-        total_ms = {}
         for minion_id in self.data.keys():
             ret[minion_id] = {
                 'states': [],
@@ -270,6 +269,5 @@ class StateOutput:
     def __str__(self):
         ret = ''
         for graph in self.graphs():
-            ret += graph + '\n'
-        
+            ret += graph + '\n\n'
         return ret
