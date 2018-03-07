@@ -16,7 +16,7 @@ create docs page:
     - tags
 
 publish to pypi:
-  state: deploy
+  stage: deploy
   script:
     - apk --no-cache add py2-pip python-dev
     - pip install twine
