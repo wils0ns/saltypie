@@ -223,9 +223,14 @@ class StateOutput:
 
             table_data = [['State', 'Plot', '%', 'ms', 'Result']]
             for state in data[minion_id][states]:
-                factor = max_bar_size * state['duration'] / data[minion_id]['total_duration']
-                bar = str(the_tick * int(factor))
-                percentage = factor * 100 / max_bar_size
+                try:
+                    factor = max_bar_size * state['duration'] / data[minion_id]['total_duration']
+                    bar = str(the_tick * int(factor))
+                    percentage = factor * 100 / max_bar_size
+                except ZeroDivisionError:
+                    self.log.warning('Salt execution might have returned with error:\n {}'.format(data[minion_id]))
+                    bar = ''
+                    percentage = 0
 
                 line = (
                     state['id'],
@@ -261,3 +266,10 @@ class StateOutput:
             tables.append(table.table)
 
         return tables
+
+    def __str__(self):
+        ret = ''
+        for graph in self.graphs():
+            ret += graph + '\n'
+        
+        return ret
