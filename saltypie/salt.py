@@ -28,20 +28,22 @@ class Salt(object):
     OUTPUT_JSON = 'json'
     OUTPUT_DICT = 'dict'
 
-    def __init__(self, url=None, username=None, passwd=None, eauth='pam'):
+    def __init__(self, url, username=None, passwd=None, eauth='pam', trust_host=True):
         """
         Salt's Rest API handler
 
         Args:
             url (str): Salt API web server URL
             username (str): The username to be used to authenticate to the salt-api
-            passwd: The password to be used to authenticate to the salt-api
-            eauth: External authentication method.
+            passwd (str): The password to be used to authenticate to the salt-api
+            eauth (str): External authentication method.
+            trust_host (bool): Whether or not to verify host certificates.
         """
         self.url = url
         self.username = username
         self.password = passwd
         self.eauth = eauth
+        self.trust_host = trust_host
         self.token = None
         self.timeout = 60
         self.session = self._new_session()
@@ -58,7 +60,7 @@ class Salt(object):
             request.Session
         """
         session = requests.Session()
-        session.verify = False
+        session.verify = not self.trust_host
         retries = Retry(total=3, backoff_factor=5)
         session.mount(self.url, HTTPAdapter(max_retries=retries))
         return session
@@ -116,7 +118,7 @@ class Salt(object):
                     timeout=timeout or self.timeout
                 )
                 return ret
-            except Exception as e:
+            except Exception:
                 exc_type, exc_value, exc_traceback = sys.exc_info()
                 self.log.error('Exception type: {}. Exception message: {}'.format(exc_type, exc_value))
 
