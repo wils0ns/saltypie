@@ -28,7 +28,7 @@ class Salt(object):
     OUTPUT_JSON = 'json'
     OUTPUT_DICT = 'dict'
 
-    def __init__(self, url, username=None, passwd=None, eauth='pam', trust_host=True):
+    def __init__(self, url, username=None, passwd=None, eauth='pam', trust_host=False):
         """
         Salt's Rest API handler
 
