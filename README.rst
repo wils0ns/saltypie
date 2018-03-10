@@ -9,6 +9,12 @@ Installation
    pip install saltypie
 
 
+Examples
+========
+
+https://gitlab.com/cathaldallan/saltypie/tree/master/examples
+
+
 Documentation
 =============
 
