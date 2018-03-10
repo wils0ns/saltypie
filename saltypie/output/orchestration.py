@@ -1,11 +1,17 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-from .state import StateOutput
+import sys
+import colorama
+import logging
+from collections import OrderedDict
+from colorclass import Color, Windows
+from terminaltables import AsciiTable, SingleTable
+
+from saltypie.output import BaseOutput
 
 
-class OrchestrationOutput(StateOutput):
-    def __init__(self, ret):
-        super(OrchestrationOutput, self).__init__(ret)
+class OrchestrationOutput(BaseOutput):
+    """Output handler for salt orchestration return objects"""
 
     def ordered_result(self, result):
         ordered = {}
@@ -13,4 +19,3 @@ class OrchestrationOutput(StateOutput):
         self.log.debug('Ordering orchestration output...')
         for master in result[0]['data']:
             pass
-

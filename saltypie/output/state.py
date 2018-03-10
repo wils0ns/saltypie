@@ -1,11 +1,14 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 import sys
-import colorama
 import logging
 from collections import OrderedDict
+
+import colorama
 from colorclass import Color, Windows
 from terminaltables import AsciiTable, SingleTable
+
+from saltypie.output.base import BaseOutput
 
 colorama.init()
 
@@ -16,26 +19,9 @@ except AttributeError as e:
     pass
 
 
-class StateOutput:
-    def __init__(self, ret):
-        """
-        Output handler for salt states return objects
+class StateOutput(BaseOutput):
+    """Output handler for salt state return objects"""
 
-        Args:
-            ret (dict): The dictionary the is returned as a result of running `state.apply` using the Salt.execute
-                        method or any other bubble.Salt method that executes states on minions.
-        """
-        self.log = logging.getLogger(__name__)
-        self.raw_data = ret
-        self.data = self.ordered_result(ret)
-        self.total_ms = {}
-        self.colored = True
-
-        if sys.stdout.encoding == 'utf-8':
-            self.safe = False
-        else:
-            self.safe = True
-    
     def ordered_result(self, result):
         """
         Order states by run number
@@ -49,7 +35,7 @@ class StateOutput:
         ordered = {}
 
         self.log.debug('Ordering state runs...')
-        for minions in result['return']:            
+        for minions in result['return']:
             for minion_id in minions.keys():
                 states = minions[minion_id]
                 try:
@@ -57,23 +43,10 @@ class StateOutput:
                         sorted(states.items(), key=lambda k: k[1]['__run_num__']))
                 except Exception:
                     self.log.error('Error: Unable to sort state results for {} minion'.format(minion_id))
-                    self.log.error('State results: {}'.format(states))                    
+                    self.log.error('State results: {}'.format(states))
                     exit(1)
 
         return ordered
-
-    @staticmethod
-    def get_state_name(key):
-        """
-        Extracts a state name from salt's `state.apply` naming pattern
-
-        Args:
-            key (str): The state key from which to extract the state name
-
-        Returns:
-            str: The state name
-        """
-        return key.split('_|-')[1]
 
     def summary(self, max_chars=None):
         """
@@ -83,14 +56,14 @@ class StateOutput:
         Result: `True` or `False` for whether or not the state run successfully
         Changes: `True` or `False` for whether or not the state has made changes to the minion
 
-        Args:            
+        Args:
             max_chars (int): Maximum number of characters to display for state ID.
                              If the ID is greater then `max_chars` ellipsis(...) will be added.
         Returns:
             dict
         """
         ret = {}
-        for minion_id in self.data.keys():
+        for minion_id in self.data:
             ret[minion_id] = {
                 'states': [],
                 'total_duration': 0,
@@ -102,7 +75,7 @@ class StateOutput:
 
                 ret[minion_id]['total_duration'] += state_data.get('duration', 0)
 
-                state_name = StateOutput.get_state_name(state_key)
+                state_name = BaseOutput.description(state_key)
                 if max_chars:
                     max_chars = abs(max_chars)
                     if len(state_name) > max_chars:
@@ -151,7 +124,7 @@ class StateOutput:
         for minion_id in data:
 
             if not data[minion_id][states]:
-                self.log.debug('No state results found. Skipping `{}`'.format(minion_id))
+                self.log.debug('No state results found. Skipping `%s`', minion_id)
                 continue
 
             table_data = [['State', 'Time(ms)', 'Result']]
@@ -196,7 +169,7 @@ class StateOutput:
         Returns:
             list
         """
-        
+
         if safe is None:
             safe = self.safe
 
@@ -224,16 +197,16 @@ class StateOutput:
             for state in data[minion_id][states]:
                 try:
                     factor = max_bar_size * state['duration'] / data[minion_id]['total_duration']
-                    bar = str(the_tick * int(factor))
+                    plot_bar = str(the_tick * int(factor))
                     percentage = factor * 100 / max_bar_size
                 except ZeroDivisionError:
-                    self.log.warning('Salt execution might have returned with error:\n {}'.format(data[minion_id]))
-                    bar = ''
+                    self.log.warning('Salt execution might have returned with error:\n %s', minion_id)
+                    plot_bar = ''
                     percentage = 0
 
                 line = (
                     state['id'],
-                    bar,
+                    plot_bar,
                     '{0:>5.2f}%'.format(percentage),
                     state['duration'],
                     state['result']
