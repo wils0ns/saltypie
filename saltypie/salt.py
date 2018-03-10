@@ -48,7 +48,7 @@ class Salt(object):
         self.timeout = 60
         self.session = self._new_session()
         self.lookup_interval = 1
-        self.max_retries_if_aborted = 3        
+        self.max_retries_if_aborted = 3
 
         self.log = logging.getLogger(__name__)
 
@@ -113,7 +113,7 @@ class Salt(object):
             try:
                 ret = self.session.post(
                     url=urljoin(self.url, path),
-                    data=data,
+                    json=data,
                     headers=headers,
                     timeout=timeout or self.timeout
                 )
@@ -139,7 +139,7 @@ class Salt(object):
         Creates an authenticated session with a salt API server
 
         Args:
-            eauth (str): External authentication method. 
+            eauth (str): External authentication method.
 
         Returns:
 
@@ -197,7 +197,7 @@ class Salt(object):
 
         client = client or Salt.CLIENT_LOCAL
 
-        if async or async_wait and not (client == Salt.CLIENT_WHEEL):
+        if async or async_wait and (client != Salt.CLIENT_WHEEL):
             client += '_async'
 
         data = {
@@ -241,7 +241,8 @@ class Salt(object):
         Args:
             jid (int): The job ID.
             until_complete (bool): Whether or not to keep pulling the job until it is completed.
-            interval (int): Time interval (in seconds) to wait in between checks. If not specified, defaults will be used.
+            interval (int): Time interval (in seconds) to wait in between checks.
+                If not specified, defaults will be used.
                 You can also set the global lookup interval using `self.lookup_interval`.
             output (str): The output format of this method (See output constants specified in this class).
         Returns:
