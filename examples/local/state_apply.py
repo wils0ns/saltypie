@@ -25,4 +25,16 @@ def main():
     sout = StateOutput(ret)
     print(sout)
 
+    ret = salt.execute(
+        client=Salt.CLIENT_LOCAL,
+        target='*',
+        fun='state.apply',
+        args=['test.sleep'],
+        pillar={'sleep': 3},
+        async_wait=True
+    )
+    print(ret)
+    sout = StateOutput(ret)
+    print(sout)
+
 main()

@@ -1,5 +1,8 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
+# pylint: disable=E1101
+"""Saltstack REST API handler"""
+
 from __future__ import print_function
 
 import sys
@@ -13,6 +16,7 @@ except ImportError:
 
 import requests
 from requests.adapters import HTTPAdapter
+
 from requests.packages.urllib3.exceptions import InsecureRequestWarning
 from requests.packages.urllib3.util.retry import Retry
 
@@ -119,16 +123,15 @@ class Salt(object):
                 )
                 return ret
             except Exception:
-                exc_type, exc_value, exc_traceback = sys.exc_info()
-                self.log.error('Exception type: {}. Exception message: {}'.format(exc_type, exc_value))
+                exc_type, exc_value, _ = sys.exc_info()
+                self.log.error('Exception type: %s. Exception message: %s', exc_type, exc_value)
 
                 if 'RemoteDisconnected' in str(exc_value) and retries:
                     retries -= 1
                     self.log.warning(
-                        'Execution failed because of connection abortion. Remaining retries: {} out of {}...'.format(
-                            retries,
-                            self.max_retries_if_aborted
-                        )
+                        'Execution failed because of connection abortion. Remaining retries: %s out of %s...',
+                        retries,
+                        self.max_retries_if_aborted
                     )
                     time.sleep(5)
                 else:
@@ -145,7 +148,7 @@ class Salt(object):
 
         """
         eauth = eauth or self.eauth
-        self.log.debug('Authenticating to salt-api using `{}` external authentication...'.format(eauth))
+        self.log.debug('Authenticating to salt-api using `%s` external authentication...', eauth)
         data = {
             'username': self.username,
             'password': self.password,
@@ -153,38 +156,37 @@ class Salt(object):
         }
 
         try:
-            r = self.post(path='login', data=data)
-            self.token = r.json()['return'][0]['token']
+            ret = self.post(path='login', data=data)
+            self.token = ret.json()['return'][0]['token']
             self.session.headers.update({'X-Auth-Token': self.token})
             self.log.debug('Authentication succeed.')
-            return r.content
+            return ret.content
         except Exception:
-            self.log.error('Error: Unable to connect to salt-api at `{}`. Return code: {}'.format(r.url, r.status_code))
+            self.log.error('Error: Unable to connect to salt-api at `%s`. Return code: %s', ret.url, ret.status_code)
             exit(1)
 
-    def execute(self, fun, client=None, target=None, args=None, kwargs=None, pillar=None, async=False, async_wait=False,
-                output='dict', returner=None):
+    def execute(self, fun, client=None, target=None, args=None, kwargs=None, pillar=None, run_async=False,
+                async_wait=False, output='dict', returner=None):
         """
         Executes a function using the salt API.
 
         Args:
             fun (str): Name of the function to be executed
             client (str): Type of client to use (local, runner or wheel).
-                          If not specified, the `local` client will be used.
+                If not specified, the `local` client will be used.
             target (str): The minions that should execute this function.
-                          If the client is not set to `local`, this parameter will be ignored.
+                If the client is not set to `local`, this parameter will be ignored.
             args (list): List of arguments to be passed to the function.
             kwargs (dict): Dictionary of arguments to be passed to the function.
             pillar (dict): Dictionary of pillar values to be passed to the function. Example: pillar={'sleep': 30}
-            async (bool): Whether or not to execute the function asynchronously.
-                          If set to `True`, it will return the job ID.
-                          If the client is set to `wheel`, this parameter wil be ignored.
-            async_wait (bool): If this parameter is set to `True`, it will use async clients, just like the `async`
-                               parameter would, but instead of returning the job ID, it will use it to keep pulling
-                               the job result until it is completed. It is basically the same as passing `async=True`
-                               and calling `Salt.lookup_job` with `until_complete=True`. Crazy right? But super useful
-                               for long run functions that you would like to wait for the return, but don't want to
-                               be vulnerable to timeouts (You're welcome.).
+            run_async (bool): Whether or not to execute the function asynchronously.
+                If set to `True`, it will return the job ID.
+                If the client is set to `wheel`, this parameter will be ignored.
+            async_wait (bool): If this parameter is set to `True`, it will use async clients, just like the `run_async`
+                parameter would, but instead of returning the job ID, it will use it to keep pulling the job result
+                until it is completed.
+                It is basically the same as passing `run_async=True` and calling `Salt.lookup_job`
+                with `until_complete=True`.
             output (str): The output format of this method (See output constants specified in this class).
             returner (str): Which salt returner to be passed to the function.
 
@@ -197,7 +199,7 @@ class Salt(object):
 
         client = client or Salt.CLIENT_LOCAL
 
-        if async or async_wait and (client != Salt.CLIENT_WHEEL):
+        if run_async or async_wait and (client != Salt.CLIENT_WHEEL):
             client += '_async'
 
         data = {
@@ -221,11 +223,11 @@ class Salt(object):
         if returner:
             data.update({'ret': returner})
 
-        self.log.debug('Executing salt command: {}'.format(data))
+        self.log.debug('Executing salt command: %s', data)
         ret = self.post(data)
         if async_wait:
             return self.lookup_job(json.loads(ret.content)['return'][0]['jid'], until_complete=True, output=output)
-        elif async:
+        elif run_async:
             return json.loads(ret.content)
         elif output == Salt.OUTPUT_DICT:
             return json.loads(ret.content)
@@ -233,6 +235,8 @@ class Salt(object):
             return ret.content
         elif output == Salt.OUTPUT_JSON:
             return str(ret.content)
+
+        return json.loads(ret.content)
 
     def lookup_job(self, jid, until_complete=False, interval=None, output='dict'):
         """
@@ -280,14 +284,14 @@ class Salt(object):
             dict
         """
         ret = self.execute(fun='manage.versions', client=Salt.CLIENT_RUNNER)['return'][0]
-        v = {
+        ver = {
             'master': ret['Master'],
             'minions': {}
         }
 
         if 'Up to date' in ret.keys():
-            v['minions'].update(ret['Up to date'])
+            ver['minions'].update(ret['Up to date'])
 
         if 'Minion requires update' in ret.keys():
-            v['minions'].update(ret['Minion requires update'])
-        return v
+            ver['minions'].update(ret['Minion requires update'])
+        return ver

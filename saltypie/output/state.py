@@ -1,7 +1,8 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
+"""Salt state output parser"""
+
 import sys
-import logging
 from collections import OrderedDict
 
 import colorama
@@ -15,7 +16,7 @@ colorama.init()
 try:
     if sys.stdout.encoding == 'utf-8':
         Windows.enable(auto_colors=True, reset_atexit=True)
-except AttributeError as e:
+except AttributeError:
     pass
 
 
@@ -42,8 +43,8 @@ class StateOutput(BaseOutput):
                     ordered[minion_id] = OrderedDict(
                         sorted(states.items(), key=lambda k: k[1]['__run_num__']))
                 except Exception:
-                    self.log.error('Error: Unable to sort state results for {} minion'.format(minion_id))
-                    self.log.error('State results: {}'.format(states))
+                    self.log.error('Error: Unable to sort state results for %s minion', minion_id)
+                    self.log.error('State results: %s', states)
                     exit(1)
 
         return ordered
@@ -190,7 +191,7 @@ class StateOutput(BaseOutput):
         for minion_id in data:
 
             if not data[minion_id][states]:
-                self.log.debug('No state results found. Skipping `{}`'.format(minion_id))
+                self.log.debug('No state results found. Skipping `%s`', minion_id)
                 continue
 
             table_data = [['State', 'Plot', '%', 'ms', 'Result']]
