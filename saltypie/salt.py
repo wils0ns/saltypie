@@ -194,7 +194,7 @@ class Salt(object):
 
         if not self.token:
             self.login()
-        
+
         client = client or Salt.CLIENT_LOCAL
         client_type = client
 
