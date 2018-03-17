@@ -198,6 +198,7 @@ class Salt(object):
             self.login()
 
         client = client or Salt.CLIENT_LOCAL
+        client_type = client
 
         if run_async or async_wait and (client != Salt.CLIENT_WHEEL):
             client += '_async'
@@ -215,7 +216,7 @@ class Salt(object):
         if args:
             data.update({'arg': args})
         if kwargs:
-            if client == Salt.CLIENT_LOCAL:
+            if client_type == Salt.CLIENT_LOCAL:
                 data.update({'kwarg': kwargs})
             else:
                 data.update(**kwargs)
