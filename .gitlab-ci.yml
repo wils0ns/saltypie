@@ -1,5 +1,13 @@
 image: alpine
 
+run pylint:
+  state: test
+  script:
+    - apk --no-cache add py2-pip python-dev
+    - pip install -r requirements.txt
+    - pip install -e .
+    - python tests/run_pytlint.py
+
 create docs page:
   stage: deploy
   script:
