@@ -4,6 +4,9 @@ colorclass
 colorama
 termcolor
 
+# test requeriments
+pylint
+
 # doc build requirements
 sphinx
 recommonmark
