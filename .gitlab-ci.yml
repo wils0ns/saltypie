@@ -1,7 +1,7 @@
 image: alpine
 
 run pylint:
-  state: test
+  stage: test
   script:
     - apk --no-cache add py2-pip python-dev
     - pip install -r requirements.txt
