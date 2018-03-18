@@ -6,7 +6,7 @@ run pylint:
     - apk --no-cache add py2-pip python-dev
     - pip install -r requirements.txt
     - pip install -e .
-    - python tests/run_pytlint.py
+    - python tests/run_pylint.py
 
 create docs page:
   stage: deploy
