@@ -3,9 +3,9 @@
 """Salt state output parser"""
 
 import sys
-from collections import OrderedDict
-
 import colorama
+import json
+from collections import OrderedDict
 from colorclass import Color, Windows
 from terminaltables import AsciiTable, SingleTable
 
@@ -37,14 +37,15 @@ class StateOutput(BaseOutput):
 
         self.log.debug('Ordering state runs...')
         for minions in result['return']:
-            for minion_id in minions.keys():
+            for minion_id in minions:
                 states = minions[minion_id]
                 try:
                     ordered[minion_id] = OrderedDict(
                         sorted(states.items(), key=lambda k: k[1]['__run_num__']))
-                except Exception:
+                except Exception as exc:
                     self.log.error('Error: Unable to sort state results for %s minion', minion_id)
-                    self.log.error('State results: %s', states)
+                    self.log.error('%s: %s', type(exc), exc)
+                    self.log.error('State results: \n%s', json.dumps(result, indent=2))
                     exit(1)
 
         return ordered
@@ -76,7 +77,7 @@ class StateOutput(BaseOutput):
 
                 ret[minion_id]['total_duration'] += state_data.get('duration', 0)
 
-                state_name = BaseOutput.description(state_key)
+                state_name = BaseOutput.extract_id(state_key)
                 if max_chars:
                     max_chars = abs(max_chars)
                     if len(state_name) > max_chars:
