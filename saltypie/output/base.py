@@ -1,12 +1,14 @@
+"""Base output handler"""
 import sys
 import logging
 from abc import ABC, abstractmethod
 
 
 class BaseOutput(ABC):
+    """Output handler for salt execution return objects"""
+
     def __init__(self, ret):
         """
-        Output handler for salt execution return objects
 
         Args:
             ret (dict): The dictionary the is returned as a result of running salt command via REST API.
@@ -23,7 +25,7 @@ class BaseOutput(ABC):
             self.safe = True
 
     @staticmethod
-    def description(key):
+    def extract_id(key):
         """
         Extracts a descriptive portion of an execution ID naming pattern.
 
