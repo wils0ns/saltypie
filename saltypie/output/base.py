@@ -1,10 +1,9 @@
 """Base output handler"""
 import sys
 import logging
-from abc import ABC, abstractmethod
 
 
-class BaseOutput(ABC):
+class BaseOutput(object):
     """Output handler for salt execution return objects"""
 
     def __init__(self, ret):
@@ -36,8 +35,7 @@ class BaseOutput(ABC):
             str: The description of the execution
         """
         return key.split('_|-')[1]
-
-    @abstractmethod
+    
     def ordered_result(self, result):
         """Returns an ordered dictionary of the execution result
 
