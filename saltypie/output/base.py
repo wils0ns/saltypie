@@ -35,7 +35,7 @@ class BaseOutput(object):
             str: The description of the execution
         """
         return key.split('_|-')[1]
-    
+
     def ordered_result(self, result):
         """Returns an ordered dictionary of the execution result
 

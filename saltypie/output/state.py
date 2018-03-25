@@ -49,9 +49,18 @@ class StateOutput(BaseOutput):
 
         return ordered
 
-    def summary(self, max_chars=None):
-        """Returns a summary of a state run with more meaningful data.
-        
+    def summary(self, *args, **kwargs):
+        """Alias for StateOutput.parse_data to support backwards compatibility.
+        Warning: This method might be removed in the future. Use `parse_data` instead.
+
+        See:
+            StateOutput.parse_data
+        """
+        return self.parse_data(*args, **kwargs)
+
+    def parse_data(self, max_chars=None):
+        """Returns the parsed data of a state run.
+
         ID: the state name extracted from the state key
         Duration: If a state did not run, its duration is set to zero
         Result: `True` or `False` for whether or not the state run successfully
@@ -59,10 +68,11 @@ class StateOutput(BaseOutput):
 
         Args:
             max_chars (int): Maximum number of characters to display for state ID.
-                             If the ID is greater then `max_chars` ellipsis(...) will be added.
+                If the ID is greater then `max_chars` ellipsis(...) will be added.
         Returns:
             dict
         """
+
         ret = {}
         for minion_id in self.data:
             ret[minion_id] = {
@@ -102,9 +112,9 @@ class StateOutput(BaseOutput):
         Args:
             failed_only (bool): Whether or not the tables should only contain the failed states
             max_chars (int): Maximum number of characters to display for state ID.
-                             If the ID is greater then `max_chars` ellipsis(...) will be added.
+                If the ID is greater then `max_chars` ellipsis(...) will be added.
             safe (bool): If safe is set to `True`, the table will be created using features that are compatible with
-                         most terminals.
+                most terminals.
 
         Returns:
             list
@@ -115,7 +125,7 @@ class StateOutput(BaseOutput):
         else:
             states = 'states'
 
-        data = self.summary(max_chars=max_chars)
+        data = self.parse_data(max_chars=max_chars)
 
         if safe is None:
             safe = self.safe
@@ -180,7 +190,7 @@ class StateOutput(BaseOutput):
         else:
             states = 'states'
 
-        data = self.summary(max_chars=max_chars)
+        data = self.parse_data(max_chars=max_chars)
         tables = []
         if safe:
             the_tick = ticks[2]
@@ -244,3 +254,6 @@ class StateOutput(BaseOutput):
         for graph in self.graphs():
             ret += graph + '\n\n'
         return ret
+
+    def __repr__(self):
+        return json.dumps(self.data)
