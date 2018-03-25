@@ -1,4 +1,5 @@
 import logging
+import json
 from saltypie import Salt
 from saltypie.output import StateOutput
 
@@ -18,10 +19,10 @@ def main():
         client=Salt.CLIENT_LOCAL,
         target='*',
         fun='state.apply',
-        args=['test.sleep'],
+        # args=['test.sleep'],
         pillar={'sleep': 1}
     )
-    print(ret)
+    print(json.dumps(ret, indent=4))
     sout = StateOutput(ret)
     print(sout)
 
@@ -33,7 +34,6 @@ def main():
         pillar={'sleep': 3},
         async_wait=True
     )
-    print(ret)
     sout = StateOutput(ret)
     print(sout)
 

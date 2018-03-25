@@ -18,10 +18,12 @@ def main():
     ret = salt.execute(
         client=Salt.CLIENT_RUNNER,
         fun='state.orch',
-        args=['orch'],
+        args=['orch_fail'],
         pillar={'sleep': 1}
     )
-    print(json.dumps(ret, indent=4))
 
+    orchout = OrchestrationOutput(ret, salt)
+    # orchout.parse_data()
+    print(json.dumps(orchout.parse_data(dict_only=True), indent=4))
 
 main()
