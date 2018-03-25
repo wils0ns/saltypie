@@ -22,7 +22,16 @@ from requests.packages.urllib3.util.retry import Retry
 
 
 class Salt(object):
-    """Salt Rest API Handler"""
+    """
+    Salt's Rest API handler
+
+    Args:
+        url (str): Salt API web server URL
+        username (str): The username to be used to authenticate to the salt-api
+        passwd (str): The password to be used to authenticate to the salt-api
+        eauth (str): External authentication method.
+        trust_host (bool): Whether or not to verify host certificates.
+    """
 
     CLIENT_LOCAL = 'local'
     CLIENT_RUNNER = 'runner'
@@ -33,16 +42,6 @@ class Salt(object):
     OUTPUT_DICT = 'dict'
 
     def __init__(self, url, username=None, passwd=None, eauth='pam', trust_host=False):
-        """
-        Salt's Rest API handler
-
-        Args:
-            url (str): Salt API web server URL
-            username (str): The username to be used to authenticate to the salt-api
-            passwd (str): The password to be used to authenticate to the salt-api
-            eauth (str): External authentication method.
-            trust_host (bool): Whether or not to verify host certificates.
-        """
         self.url = url
         self.username = username
         self.password = passwd
