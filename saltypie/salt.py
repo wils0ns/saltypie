@@ -90,8 +90,8 @@ class Salt(object):
                 timeout=timeout or self.timeout
             )
             return ret
-        except Exception as e:
-            self.log.error(e)
+        except Exception as exc:
+            self.log.error(exc)
             exit(1)
 
     def post(self, data, path='', headers=None, timeout=None):

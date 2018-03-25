@@ -7,7 +7,6 @@ from collections import OrderedDict
 from colorclass import Color, Windows
 from terminaltables import AsciiTable, SingleTable
 
-from saltypie.salt import Salt
 from saltypie.output import BaseOutput, StateOutput
 
 
