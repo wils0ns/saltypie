@@ -1,0 +1,129 @@
+{
+    "return": [
+        {
+            "outputter": "highstate",
+            "data": {
+                "local-cm_master": {
+                    "salt_|-Step04_|-Step04_|-state": {
+                        "comment": "Run failed on minions: local-cm\nFailures:\n    local-cm:\n    ----------\n              ID: test fail without changes\n        Function: test.fail_without_changes\n          Result: False\n         Comment: Failure!\n         Started: 01
+:04:06.254132\n        Duration: 0.758 ms\n         Changes:   \n    \n    Summary for local-cm\n    ------------\n    Succeeded: 0\n    Failed:    1\n    ------------\n    Total states run:     1\n    Total run time:   0.758 ms\n",
+                        "name": "Step04",
+                        "start_time": "01:04:06.103621",
+                        "result": false,
+                        "duration": 161.279,
+                        "__run_num__": 3,
+                        "__jid__": "20180325010406153321",
+                        "__sls__": "orch_fail",
+                        "changes": {},
+                        "__id__": "Step04"
+                    },
+                    "salt_|-Step02_|-test.ping_|-function": {
+                        "comment": "Function ran successfully. Function test.ping ran on local-cm.",
+                        "name": "test.ping",
+                        "start_time": "01:04:04.492777",
+                        "result": true,
+                        "duration": 335.846,
+                        "__run_num__": 1,
+                        "__jid__": "20180325010404511535",
+                        "__sls__": "orch_fail",
+                        "changes": {
+                            "ret": {
+                                "local-cm": true
+                            },
+                            "out": "highstate"
+                        },
+                        "__id__": "Step02"
+                    },
+                    "salt_|-Step01_|-Step01_|-state": {
+                        "comment": "States ran successfully. Updating local-cm.",
+                        "name": "Step01",
+                        "start_time": "01:04:04.085286",
+                        "result": true,
+                        "duration": 407.349,
+                        "__run_num__": 0,
+                        "__jid__": "20180325010404100596",
+                        "__sls__": "orch_fail",
+                        "changes": {
+                            "ret": {
+                                "local-cm": {
+                                    "test_|-test no operation_|-test no operation_|-nop": {
+                                        "comment": "Success!",
+                                        "name": "test no operation",
+                                        "start_time": "01:04:04.377918",
+                                        "result": true,
+                                        "duration": 0.264,
+                                        "__run_num__": 2,
+                                        "__sls__": "test.nop",
+                                        "changes": {},
+                                        "__id__": "test no operation"
+                                    },
+                                    "test_|-test succeed with changes_|-test succeed with changes_|-succeed_with_changes": {
+                                        "comment": "Success!",
+                                        "name": "test succeed with changes",
+                                        "start_time": "01:04:04.377012",
+                                        "result": true,
+                                        "duration": 0.408,
+                                        "__run_num__": 0,
+                                        "__sls__": "test.succeed_with_changes",
+                                        "changes": {
+                                            "testing": {
+                                                "new": "Something pretended to change",
+                                                "old": "Unchanged"
+                                            }
+                                        },
+                                        "__id__": "test succeed with changes"
+                                    },
+                                    "test_|-test succeed without changes_|-test succeed without changes_|-succeed_without_changes": {
+                                        "comment": "Success!",
+                                        "name": "test succeed without changes",
+                                        "start_time": "01:04:04.377539",
+                                        "result": true,
+                                        "duration": 0.281,
+                                        "__run_num__": 1,
+                                        "__sls__": "test.succeed_without_changes",
+                                        "changes": {},
+                                        "__id__": "test succeed without changes"
+                                    }
+                                }
+                            },
+                            "out": "highstate"
+                        },
+                        "__id__": "Step01"
+                    },
+                    "salt_|-Step03_|-Step03_|-state": {
+                        "comment": "States ran successfully. Updating local-cm.",
+                        "name": "Step03",
+                        "start_time": "01:04:04.829166",
+                        "result": true,
+                        "duration": 1273.929,
+                        "__run_num__": 2,
+                        "__jid__": "20180325010404871066",
+                        "__sls__": "orch_fail",
+                        "changes": {
+                            "ret": {
+                                "local-cm": {
+                                    "module_|-test sleep for 1 seconds_|-test.sleep_|-run": {
+                                        "comment": "Module function test.sleep executed",
+                                        "name": "test.sleep",
+                                        "start_time": "01:04:04.958681",
+                                        "result": true,
+                                        "duration": 1013.843,
+                                        "__run_num__": 0,
+                                        "__sls__": "test.sleep",
+                                        "changes": {
+                                            "ret": true
+                                        },
+                                        "__id__": "test sleep for 1 seconds"
+                                    }
+                                }
+                            },
+                            "out": "highstate"
+                        },
+                        "__id__": "Step03"
+                    }
+                }
+            },
+            "retcode": 1
+        }
+    ]
+}

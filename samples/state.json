@@ -1,0 +1,21 @@
+{
+    "return": [
+        {
+            "local-cm": {
+                "module_|-test sleep for 1 seconds_|-test.sleep_|-run": {
+                    "comment": "Module function test.sleep executed",
+                    "name": "test.sleep",
+                    "start_time": "02:29:45.494262",
+                    "result": true,
+                    "duration": 1013.758,
+                    "__run_num__": 0,
+                    "__sls__": "test.sleep",
+                    "changes": {
+                        "ret": true
+                    },
+                    "__id__": "test sleep for 1 seconds"
+                }
+            }
+        }
+    ]
+}
