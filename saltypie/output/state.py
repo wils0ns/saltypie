@@ -3,9 +3,9 @@
 """Salt state output parser"""
 
 import sys
-import colorama
 import json
 from collections import OrderedDict
+import colorama
 from colorclass import Color, Windows
 from terminaltables import AsciiTable, SingleTable
 
@@ -24,8 +24,7 @@ class StateOutput(BaseOutput):
     """Output handler for salt state return objects"""
 
     def ordered_result(self, result):
-        """
-        Order states by run number
+        """Order states by run number
 
         Args:
             result (dict): The return object of a `state.apply` execution
@@ -51,8 +50,8 @@ class StateOutput(BaseOutput):
         return ordered
 
     def summary(self, max_chars=None):
-        """
-        Returns a summary of a state run with more meaningful data like `ID`, `duration`, `result` and `changes`.
+        """Returns a summary of a state run with more meaningful data.
+        
         ID: the state name extracted from the state key
         Duration: If a state did not run, its duration is set to zero
         Result: `True` or `False` for whether or not the state run successfully
@@ -98,8 +97,7 @@ class StateOutput(BaseOutput):
         return ret
 
     def tables(self, failed_only=False, max_chars=None, safe=None):
-        """
-        Creates a list of tables representing the state run for which minion.
+        """Creates a list of tables representing the state run for which minion.
 
         Args:
             failed_only (bool): Whether or not the tables should only contain the failed states
@@ -157,8 +155,8 @@ class StateOutput(BaseOutput):
         return tables
 
     def graphs(self, failed_only=False, max_chars=None, max_bar_size=30, safe=None):
-        """
-        Creates a list of tables representing the state run including a more graphical representation of the duration.
+        """Creates a list of tables representing the state run including a more graphical
+        representation of the duration.
 
         Args:
             failed_only (bool): Whether or not the tables should only contain the failed states
