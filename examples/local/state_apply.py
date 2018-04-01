@@ -23,7 +23,7 @@ def main():
         pillar={'sleep': 1}
     )
     print(json.dumps(ret, indent=4))
-    sout = StateOutput(ret)
+    sout = StateOutput(ret)    
     print(sout)
 
     ret = salt.execute(
@@ -35,6 +35,7 @@ def main():
         async_wait=True
     )
     sout = StateOutput(ret)
+    sout.safe = False
     print(sout)
 
 main()

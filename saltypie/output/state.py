@@ -51,7 +51,7 @@ class StateOutput(BaseOutput):
 
     def summary(self, *args, **kwargs):
         """Alias for StateOutput.parse_data to support backwards compatibility.
-        Warning: This method might be removed in the future. Use `parse_data` instead.
+        Warning: This method might be removed in the future. Use `StateOutput.parse_data()` instead.
 
         See:
             StateOutput.parse_data
@@ -106,75 +106,17 @@ class StateOutput(BaseOutput):
 
         return ret
 
-    def tables(self, failed_only=False, max_chars=None, safe=None):
-        """Creates a list of tables representing the state run for which minion.
-
-        Args:
-            failed_only (bool): Whether or not the tables should only contain the failed states
-            max_chars (int): Maximum number of characters to display for state ID.
-                If the ID is greater then `max_chars` ellipsis(...) will be added.
-            safe (bool): If safe is set to `True`, the table will be created using features that are compatible with
-                most terminals.
-
-        Returns:
-            list
-        """
-
-        if failed_only:
-            states = 'failed_states'
-        else:
-            states = 'states'
-
-        data = self.parse_data(max_chars=max_chars)
-
-        if safe is None:
-            safe = self.safe
-
-        tables = []
-        for minion_id in data:
-
-            if not data[minion_id][states]:
-                self.log.debug('No state results found. Skipping `%s`', minion_id)
-                continue
-
-            table_data = [['State', 'Time(ms)', 'Result']]
-
-            for state in data[minion_id][states]:
-                line = (state['id'], state['duration'], state['result'])
-                if state['result']:
-                    table_data.append([Color.cyan(item, auto=True) for item in line])
-                else:
-                    table_data.append([Color.red(item, auto=True) for item in line])
-
-            total_sec = data[minion_id]['total_duration'] / 1000
-            if total_sec > 60:
-                total_time = '{0:1.2f}min'.format(total_sec / 60)
-            else:
-                total_time = '{0:1.2f}s'.format(total_sec)
-            table_data.append(['Total elapsed time: {}'.format(total_time)])
-
-            if safe:
-                table = AsciiTable(table_data)
-            else:
-                table = SingleTable(table_data)
-
-            table.inner_footing_row_border = True
-            table.inner_column_border = False
-            table.title = ' {} '.format(minion_id)
-            tables.append(table.table)
-        return tables
-
-    def graphs(self, failed_only=False, max_chars=None, max_bar_size=30, safe=None):
+    def tables(self, failed_only=False, max_chars=None, max_bar_size=30, safe=None):
         """Creates a list of tables representing the state run including a more graphical
         representation of the duration.
 
         Args:
             failed_only (bool): Whether or not the tables should only contain the failed states
             max_chars (int): Maximum number of characters to display for state ID.
-                             If the ID is greater then `max_chars` ellipsis(...) will be added.
+                If the ID is greater then `max_chars` ellipsis(...) will be added.
             max_bar_size (int): Size of the bar plot equivalent to 100% of the execution time.
-            safe (bool): If safe is set to `True`, the table will be created using features that are compatible with
-                         most terminals.
+            safe (bool): If safe is set to `True`, the table will be created using features that
+                are compatible with most terminals.
 
         Returns:
             list
@@ -183,8 +125,6 @@ class StateOutput(BaseOutput):
         if safe is None:
             safe = self.safe
 
-        ticks = ('█', '▌', '|')
-
         if failed_only:
             states = 'failed_states'
         else:
@@ -192,10 +132,6 @@ class StateOutput(BaseOutput):
 
         data = self.parse_data(max_chars=max_chars)
         tables = []
-        if safe:
-            the_tick = ticks[2]
-        else:
-            the_tick = ticks[0]
 
         for minion_id in data:
 
@@ -205,19 +141,18 @@ class StateOutput(BaseOutput):
 
             table_data = [['State', 'Plot', '%', 'ms', 'Result']]
             for state in data[minion_id][states]:
-                try:
-                    factor = max_bar_size * state['duration'] / data[minion_id]['total_duration']
-                    plot_bar = str(the_tick * int(factor))
-                    percentage = factor * 100 / max_bar_size
-                except ZeroDivisionError:
-                    self.log.warning('Salt execution might have returned with error:\n %s', minion_id)
-                    plot_bar = ''
-                    percentage = 0
+
+                plot_bar, percentage = self._plot_duration(
+                    duration=state['duration'],
+                    total_duration=data[minion_id]['total_duration'],
+                    max_bar_size=max_bar_size,
+                    safe=safe
+                )
 
                 line = (
                     state['id'],
                     plot_bar,
-                    '{0:>5.2f}%'.format(percentage),
+                    percentage,
                     state['duration'],
                     state['result']
                 )
@@ -230,12 +165,11 @@ class StateOutput(BaseOutput):
                 else:
                     table_data.append([item for item in line])
 
-            total_sec = data[minion_id]['total_duration'] / 1000
-            if total_sec > 60:
-                total_time = '{0:1.2f}min'.format(total_sec / 60)
-            else:
-                total_time = '{0:1.2f}s'.format(total_sec)
-            table_data.append(['Total elapsed time: {}'.format(total_time)])
+            table_data.append([
+                'Total elapsed time: {}'.format(
+                    self.format_duration(data[minion_id]['total_duration'])
+                )
+            ])
 
             if safe:
                 table = AsciiTable(table_data)
@@ -249,10 +183,20 @@ class StateOutput(BaseOutput):
 
         return tables
 
+    def graphs(self, *args, **kwargs):
+        """Alias for StateOutput.tables to support backwards compatibility.
+        Warning: This method might be removed in the future. Use `StateOutput.tables()` instead.
+
+        See:
+            StateOutput.tables
+        """
+        return self.tables(*args, **kwargs)
+
+
     def __str__(self):
         ret = ''
-        for graph in self.graphs():
-            ret += graph + '\n\n'
+        for table in self.tables():
+            ret += table + '\n\n'
         return ret
 
     def __repr__(self):
