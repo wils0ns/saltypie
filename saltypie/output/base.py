@@ -1,6 +1,7 @@
 """Base output handler"""
 import sys
 import logging
+from terminaltables import AsciiTable, SingleTable
 
 
 class BaseOutput(object):
@@ -68,12 +69,23 @@ class BaseOutput(object):
 
         return formatted_duration
 
-    def _plot_duration(self, duration, total_duration, max_bar_size=30, safe=None):
+    def _plot_duration(self, duration, total_duration, max_bar_size=30):
+        """Returns a bar and the percentage value of the duration in relation to the total.
+
+        Args:
+            duration (float): The duration.
+            total_duration (float): The total duration (Usually of a highstate).
+            max_bar_size (int, optional): Defaults to 30. The bar size that corresponds to 100%.
+
+        Returns:
+            tuple: the bar, the percentage value
+        """
+
         ticks = ('█', '▌', '|')
         plot_bar = ''
         percentage = 0
 
-        if safe is None:
+        if self.safe:
             the_tick = ticks[2]
         else:
             the_tick = ticks[0]
@@ -86,4 +98,25 @@ class BaseOutput(object):
             self.log.warning('Unable to format zero duration.')
 
         return plot_bar, '{0:>5.2f}%'.format(percentage)
-        
+
+    def _create_table(self, data, title=None):
+        """Creates a console printable table based on the provided data.
+
+        Args:
+            data (list): List of data (As expected by terminaltables's table classes).
+            title (str, optional): The table title.
+
+        Returns:
+            str: A console printable table.
+        """
+
+        if self.safe:
+            table = AsciiTable(data)
+        else:
+            table = SingleTable(data)
+
+        table.title = ' {} '.format(title)
+        table.inner_column_border = False
+        table.inner_footing_row_border = True
+
+        return table.table

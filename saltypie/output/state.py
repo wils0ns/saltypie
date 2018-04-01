@@ -122,9 +122,6 @@ class StateOutput(BaseOutput):
             list
         """
 
-        if safe is None:
-            safe = self.safe
-
         if failed_only:
             states = 'failed_states'
         else:
@@ -145,8 +142,7 @@ class StateOutput(BaseOutput):
                 plot_bar, percentage = self._plot_duration(
                     duration=state['duration'],
                     total_duration=data[minion_id]['total_duration'],
-                    max_bar_size=max_bar_size,
-                    safe=safe
+                    max_bar_size=max_bar_size
                 )
 
                 line = (
@@ -171,15 +167,7 @@ class StateOutput(BaseOutput):
                 )
             ])
 
-            if safe:
-                table = AsciiTable(table_data)
-            else:
-                table = SingleTable(table_data)
-
-            table.title = ' {} '.format(minion_id)
-            table.inner_column_border = False
-            table.inner_footing_row_border = True
-            tables.append(table.table)
+            tables.append(self._create_table(data=table_data, title=minion_id))
 
         return tables
 
