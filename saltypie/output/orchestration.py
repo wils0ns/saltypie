@@ -23,6 +23,7 @@ class OrchestrationOutput(BaseOutput):
     def __init__(self, ret, salt=None):
         super(OrchestrationOutput, self).__init__(ret)
         self.salt = salt
+        self.parsed_data = self.parse_data()
 
     def ordered_result(self, result):
         """Order orchestration steps by run number.
@@ -147,3 +148,32 @@ class OrchestrationOutput(BaseOutput):
             bool
         """
         return OrchestrationOutput.get_step_type(key) == 'state'
+
+    def summary_table(self, max_bar_size=30):
+        table_data = [['Step', 'Plot', '%', 'Time(ms)', 'Result']]
+
+        for _, orch in self.parsed_data.items():
+            for step in orch['data']:
+                for step_name, step_data in step.items():
+                    plot_bar, percentage = self._plot_duration(
+                        duration=step_data['duration'],
+                        total_duration=orch['total_duration'],
+                        max_bar_size=max_bar_size
+                    )
+                    _id = self.extract_id(step_name)
+                    line = (_id, plot_bar, percentage, step_data['duration'], step_data['result'])
+                    if step_data['result']:
+                        table_data.append([Color.cyan(item, auto=True) for item in line])
+                    else:
+                        table_data.append([Color.red(item, auto=True) for item in line])
+
+            table_data.append([
+                'Total elapsed time: {}'.format(
+                    self.format_duration(orch['total_duration'])
+                )
+            ])
+
+        return self._create_table(data=table_data, title='Orchestration')
+
+    def detailed_table(self):
+        pass

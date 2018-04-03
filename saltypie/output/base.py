@@ -115,7 +115,9 @@ class BaseOutput(object):
         else:
             table = SingleTable(data)
 
-        table.title = ' {} '.format(title)
+        if title:
+            table.title = ' {} '.format(title)
+
         table.inner_column_border = False
         table.inner_footing_row_border = True
 

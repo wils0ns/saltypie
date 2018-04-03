@@ -106,7 +106,7 @@ class StateOutput(BaseOutput):
 
         return ret
 
-    def tables(self, failed_only=False, max_chars=None, max_bar_size=30, safe=None):
+    def tables(self, failed_only=False, max_chars=None, max_bar_size=30):
         """Creates a list of tables representing the state run including a more graphical
         representation of the duration.
 
@@ -115,8 +115,6 @@ class StateOutput(BaseOutput):
             max_chars (int): Maximum number of characters to display for state ID.
                 If the ID is greater then `max_chars` ellipsis(...) will be added.
             max_bar_size (int): Size of the bar plot equivalent to 100% of the execution time.
-            safe (bool): If safe is set to `True`, the table will be created using features that
-                are compatible with most terminals.
 
         Returns:
             list

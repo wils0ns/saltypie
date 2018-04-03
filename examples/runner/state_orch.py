@@ -8,7 +8,7 @@ logging.basicConfig(level=logging.DEBUG)
 
 def main():
     salt = Salt(
-        url='https://192.168.70.11:8000',
+        url='https://192.168.70.10:8000',
         username='saltapiuser',
         passwd='abc123',
         trust_host=True
@@ -22,8 +22,11 @@ def main():
         pillar={'sleep': 1}
     )
 
+    # print(json.dumps(ret, indent=4))
+
     orchout = OrchestrationOutput(ret, salt)
     # orchout.parse_data()
-    print(json.dumps(orchout.parse_data(dict_only=True), indent=4))
+    print(orchout.summary_table())
+    # print(json.dumps(orchout.parse_data(dict_only=True), indent=4))
 
 main()
