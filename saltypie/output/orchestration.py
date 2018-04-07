@@ -149,8 +149,20 @@ class OrchestrationOutput(BaseOutput):
         """
         return OrchestrationOutput.get_step_type(key) == 'state'
 
-    def summary_table(self, max_bar_size=30):
-        table_data = [['Step', 'Plot', '%', 'Time(ms)', 'Result']]
+    def summary_table(self, max_bar_size=30, time_unit='s'):
+        """Returns a table listing the orchestration steps and information about its duration and result.
+
+        Args:
+            max_bar_size (int, optional): Defaults to 30. Size of the bar plot equivalent to 100%
+                of the execution time.
+            time_unit (str, optional): Defaults to 's'. Step duration unit.
+                ms: milliseconds, s: seconds or min: minutes.
+
+        Returns:
+            str: A console printable table representation of the orchestration.
+        """
+
+        table_data = [['Step', 'Plot', '%', 'Time({})'.format(time_unit), 'Result']]
 
         for _, orch in self.parsed_data.items():
             for step in orch['data']:
@@ -160,8 +172,11 @@ class OrchestrationOutput(BaseOutput):
                         total_duration=orch['total_duration'],
                         max_bar_size=max_bar_size
                     )
+
                     _id = self.extract_id(step_name)
-                    line = (_id, plot_bar, percentage, step_data['duration'], step_data['result'])
+                    duration = self.format_time(step_data['duration'], unit=time_unit)
+
+                    line = (_id, plot_bar, percentage, duration, step_data['result'])
                     if step_data['result']:
                         table_data.append([Color.cyan(item, auto=True) for item in line])
                     else:
@@ -177,3 +192,4 @@ class OrchestrationOutput(BaseOutput):
 
     def detailed_table(self):
         pass
+    

@@ -26,7 +26,7 @@ def main():
 
     orchout = OrchestrationOutput(ret, salt)
     # orchout.parse_data()
-    print(orchout.summary_table())
+    print(orchout.summary_table(max_bar_size=100, time_unit='s'))
     # print(json.dumps(orchout.parse_data(dict_only=True), indent=4))
 
 main()
