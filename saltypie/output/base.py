@@ -99,6 +99,28 @@ class BaseOutput(object):
 
         return plot_bar, '{0:>5.2f}%'.format(percentage)
 
+    def format_time(self, value, unit):
+        """Converts milliseconds to the specified unit.
+
+        Args:
+            value (float): The time in milliseconds.
+            unit (str): The unit to convert to. `s`: for seconds, `min`: for minutes.
+
+        Returns:
+            str: Formatted time
+        """
+
+        formatted_value = value
+
+        if unit == 's':
+            formatted_value = value / 1000
+        elif unit == 'min':
+            formatted_value = value / 3600000
+        elif unit == 'ms':
+            self.log.error('Unsupported unit %s', unit)
+            exit(1)
+        return '{0:>5.2f}'.format(formatted_value)
+
     def _create_table(self, data, title=None):
         """Creates a console printable table based on the provided data.
 
