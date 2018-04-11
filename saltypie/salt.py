@@ -164,7 +164,7 @@ class Salt(object):
             self.log.error('Error: Unable to connect to salt-api at `%s`. Return code: %s', ret.url, ret.status_code)
             exit(1)
 
-    def execute(self, fun, client=None, target=None, args=None, kwargs=None, pillar=None, run_async=False,
+    def execute(self, fun, client=None, target=None, tgt_type=None, args=None, kwargs=None, pillar=None, run_async=False,
                 async_wait=False, output='dict', returner=None):
         """
         Executes a function using the salt API.
@@ -175,6 +175,7 @@ class Salt(object):
                 If not specified, the `local` client will be used.
             target (str): The minions that should execute this function.
                 If the client is not set to `local`, this parameter will be ignored.
+            tgt_type (str): Targeting type
             args (list): List of arguments to be passed to the function.
             kwargs (dict): Dictionary of arguments to be passed to the function.
             pillar (dict): Dictionary of pillar values to be passed to the function. Example: pillar={'sleep': 30}
@@ -209,6 +210,8 @@ class Salt(object):
 
         if target:
             data.update({'tgt': target})
+        if tgt_type:
+            data.update({'tgt_type': tgt_type})
         if pillar:
             args = args or []
             args.append('pillar={}'.format(json.dumps(pillar)))
