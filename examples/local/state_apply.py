@@ -13,7 +13,6 @@ def main():
         passwd='abc123',
         trust_host=True
     )
-    salt.eauth = 'pam'
 
     ret = salt.execute(
         client=Salt.CLIENT_LOCAL,
@@ -22,20 +21,20 @@ def main():
         # args=['test.sleep'],
         pillar={'sleep': 1}
     )
-    print(json.dumps(ret, indent=4))
-    sout = StateOutput(ret)    
+    # print(json.dumps(ret, indent=4))
+    sout = StateOutput(ret)
     print(sout)
 
-    ret = salt.execute(
-        client=Salt.CLIENT_LOCAL,
-        target='*',
-        fun='state.apply',
-        args=['test.sleep'],
-        pillar={'sleep': 3},
-        async_wait=True
-    )
-    sout = StateOutput(ret)
-    sout.safe = False
-    print(sout)
+    # ret = salt.execute(
+    #     client=Salt.CLIENT_LOCAL,
+    #     target='*',
+    #     fun='state.apply',
+    #     args=['test.sleep'],
+    #     pillar={'sleep': 3},
+    #     async_wait=True
+    # )
+    # sout = StateOutput(ret)
+    # sout.safe = False
+    # print(sout)
 
 main()
