@@ -55,6 +55,8 @@ Output:
 Runner client example
 =====================
 
+Code:
+
 .. code-block:: python
 
    from saltypie import Salt
@@ -77,6 +79,8 @@ Runner client example
 
    orchout = OrchestrationOutput(ret, salt)
    print(orchout.summary_table(max_bar_size=100, time_unit='s'))
+
+Output:
 
 .. code-block:: bash
 
