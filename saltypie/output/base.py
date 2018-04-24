@@ -13,7 +13,7 @@ class BaseOutput(object):
         Args:
             ret (dict): The dictionary the is returned as a result of running salt command via REST API.
         """
-        self.log = logging.getLogger(__name__)
+        self.log = logging.getLogger('{}.{}'.format(self.__module__, type(self).__name__))
         self.raw_data = ret
         self.data = self.ordered_result(ret)
         self.total_ms = {}

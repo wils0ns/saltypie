@@ -1,0 +1,231 @@
+{
+    "return": [
+        {
+            "central-cm_master": {
+                "fun_args": [
+                    "orch_fail",
+                    {
+                        "pillar": {
+                            "sleep": 1
+                        }
+                    }
+                ],
+                "jid": "20180424030136397625",
+                "return": {
+                    "outputter": "highstate",
+                    "data": {
+                        "central-cm_master": {
+                            "salt_|-Step04_|-Step04_|-state": {
+                                "comment": "Run failed on minions: central-cm, local-cm",
+                                "name": "Step04",
+                                "start_time": "03:01:52.691591",
+                                "result": false,
+                                "duration": 5108.925,
+                                "__run_num__": 3,
+                                "__jid__": "20180424030152745227",
+                                "__sls__": "orch_fail",
+                                "changes": {
+                                    "ret": {
+                                        "central-cm": {
+                                            "test_|-test fail without changes_|-test fail without changes_|-fail_without_changes": {
+                                                "comment": "Failure!",
+                                                "name": "test fail without changes",
+                                                "start_time": "03:01:52.890159",
+                                                "result": false,
+                                                "duration": 0.481,
+                                                "__run_num__": 0,
+                                                "__sls__": "test.fail_without_changes",
+                                                "changes": {},
+                                                "__id__": "test fail without changes"
+                                            }
+                                        },
+                                        "local-cm": {
+                                            "test_|-test fail without changes_|-test fail without changes_|-fail_without_changes": {
+                                                "comment": "Failure!",
+                                                "name": "test fail without changes",
+                                                "start_time": "03:01:52.862645",
+                                                "result": false,
+                                                "duration": 0.554,
+                                                "__run_num__": 0,
+                                                "__sls__": "test.fail_without_changes",
+                                                "changes": {},
+                                                "__id__": "test fail without changes"
+                                            }
+                                        }
+                                    },
+                                    "out": "highstate"
+                                },
+                                "__id__": "Step04"
+                            },
+                            "salt_|-Step02_|-test.ping_|-function": {
+                                "comment": "Function ran successfully. Function test.ping ran on central-cm, local-cm.",
+                                "name": "test.ping",
+                                "start_time": "03:01:42.421276",
+                                "result": true,
+                                "duration": 5122.011,
+                                "__run_num__": 1,
+                                "__jid__": "20180424030142449610",
+                                "__sls__": "orch_fail",
+                                "changes": {
+                                    "ret": {
+                                        "central-cm": true,
+                                        "local-cm": true
+                                    },
+                                    "out": "highstate"
+                                },
+                                "__id__": "Step02"
+                            },
+                            "salt_|-Step01_|-Step01_|-state": {
+                                "comment": "States ran successfully. Updating central-cm, local-cm.",
+                                "name": "Step01",
+                                "start_time": "03:01:37.300532",
+                                "result": true,
+                                "duration": 5120.602,
+                                "__run_num__": 0,
+                                "__jid__": "20180424030137331722",
+                                "__sls__": "orch_fail",
+                                "changes": {
+                                    "ret": {
+                                        "central-cm": {
+                                            "test_|-test no operation_|-test no operation_|-nop": {
+                                                "comment": "Success!",
+                                                "name": "test no operation",
+                                                "start_time": "03:01:37.848875",
+                                                "result": true,
+                                                "duration": 0.368,
+                                                "__run_num__": 2,
+                                                "__sls__": "test.nop",
+                                                "changes": {},
+                                                "__id__": "test no operation"
+                                            },
+                                            "test_|-test succeed with changes_|-test succeed with changes_|-succeed_with_changes": {
+                                                "comment": "Success!",
+                                                "name": "test succeed with changes",
+                                                "start_time": "03:01:37.846558",
+                                                "result": true,
+                                                "duration": 0.476,
+                                                "__run_num__": 0,
+                                                "__sls__": "test.succeed_with_changes",
+                                                "changes": {
+                                                    "testing": {
+                                                        "new": "Something pretended to change",
+                                                        "old": "Unchanged"
+                                                    }
+                                                },
+                                                "__id__": "test succeed with changes"
+                                            },
+                                            "test_|-test succeed without changes_|-test succeed without changes_|-succeed_without_changes": {
+                                                "comment": "Success!",
+                                                "name": "test succeed without changes",
+                                                "start_time": "03:01:37.847183",
+                                                "result": true,
+                                                "duration": 1.487,
+                                                "__run_num__": 1,
+                                                "__sls__": "test.succeed_without_changes",
+                                                "changes": {},
+                                                "__id__": "test succeed without changes"
+                                            }
+                                        },
+                                        "local-cm": {
+                                            "test_|-test no operation_|-test no operation_|-nop": {
+                                                "comment": "Success!",
+                                                "name": "test no operation",
+                                                "start_time": "03:01:37.726222",
+                                                "result": true,
+                                                "duration": 0.292,
+                                                "__run_num__": 2,
+                                                "__sls__": "test.nop",
+                                                "changes": {},
+                                                "__id__": "test no operation"
+                                            },
+                                            "test_|-test succeed with changes_|-test succeed with changes_|-succeed_with_changes": {
+                                                "comment": "Success!",
+                                                "name": "test succeed with changes",
+                                                "start_time": "03:01:37.725285",
+                                                "result": true,
+                                                "duration": 0.413,
+                                                "__run_num__": 0,
+                                                "__sls__": "test.succeed_with_changes",
+                                                "changes": {
+                                                    "testing": {
+                                                        "new": "Something pretended to change",
+                                                        "old": "Unchanged"
+                                                    }
+                                                },
+                                                "__id__": "test succeed with changes"
+                                            },
+                                            "test_|-test succeed without changes_|-test succeed without changes_|-succeed_without_changes": {
+                                                "comment": "Success!",
+                                                "name": "test succeed without changes",
+                                                "start_time": "03:01:37.725816",
+                                                "result": true,
+                                                "duration": 0.304,
+                                                "__run_num__": 1,
+                                                "__sls__": "test.succeed_without_changes",
+                                                "changes": {},
+                                                "__id__": "test succeed without changes"
+                                            }
+                                        }
+                                    },
+                                    "out": "highstate"
+                                },
+                                "__id__": "Step01"
+                            },
+                            "salt_|-Step03_|-Step03_|-state": {
+                                "comment": "States ran successfully. Updating central-cm, local-cm.",
+                                "name": "Step03",
+                                "start_time": "03:01:47.543432",
+                                "result": true,
+                                "duration": 5147.414,
+                                "__run_num__": 2,
+                                "__jid__": "20180424030147572694",
+                                "__sls__": "orch_fail",
+                                "changes": {
+                                    "ret": {
+                                        "central-cm": {
+                                            "module_|-test sleep for 1 seconds_|-test.sleep_|-run": {
+                                                "comment": "Module function test.sleep executed",
+                                                "name": "test.sleep",
+                                                "start_time": "03:01:47.746807",
+                                                "result": true,
+                                                "duration": 1016.245,
+                                                "__run_num__": 0,
+                                                "__sls__": "test.sleep",
+                                                "changes": {
+                                                    "ret": true
+                                                },
+                                                "__id__": "test sleep for 1 seconds"
+                                            }
+                                        },
+                                        "local-cm": {
+                                            "module_|-test sleep for 1 seconds_|-test.sleep_|-run": {
+                                                "comment": "Module function test.sleep executed",
+                                                "name": "test.sleep",
+                                                "start_time": "03:01:47.714166",
+                                                "result": true,
+                                                "duration": 1015.395,
+                                                "__run_num__": 0,
+                                                "__sls__": "test.sleep",
+                                                "changes": {
+                                                    "ret": true
+                                                },
+                                                "__id__": "test sleep for 1 seconds"
+                                            }
+                                        }
+                                    },
+                                    "out": "highstate"
+                                },
+                                "__id__": "Step03"
+                            }
+                        }
+                    },
+                    "retcode": 1
+                },
+                "success": false,
+                "_stamp": "2018-04-24T03:01:36.778205",
+                "user": "saltapiuser",
+                "fun": "runner.state.orch"
+            }
+        }
+    ]
+}

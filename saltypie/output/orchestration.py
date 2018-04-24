@@ -37,15 +37,24 @@ class OrchestrationOutput(BaseOutput):
         ordered = {}
 
         self.log.debug('Ordering orchestration output...')
+
         try:
-            for master, _orch in result['return'][0]['data'].items():
+            data = result['return'][0]['data']
+        except KeyError:
+            self.log.debug('Unable to retrieve orchestration data.'
+                           ' Attemping job lookup return object format...')
+            data = list(result['return'][0].values())[0]['return']['data']
+            self.log.debug('Data retrieved.')
+
+        try:
+            for master, _orch in data.items():
                 ordered[master] = OrderedDict(
                     sorted(_orch.items(), key=lambda k: k[1]['__run_num__']))
         except Exception as exc:
             self.log.error('Error: Unable to sort orchestration results')
             self.log.error('%s: %s', type(exc), exc)
-            self.log.error('Orchestration results: \n%s', json.dumps(result, indent=2))
-            exit(1)
+            self.log.debug('Orchestration results: \n%s', result)
+            raise
 
         return ordered
 
@@ -64,6 +73,8 @@ class OrchestrationOutput(BaseOutput):
         Returns:
             dict: Normalized data
         """
+
+        state_data = dict(state_data)
 
         if state_data['changes']:
             state_data['changes'] = {
