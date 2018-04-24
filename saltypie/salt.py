@@ -123,7 +123,6 @@ class Salt(object):
                 return ret
             except Exception:
                 exc_type, exc_value, _ = sys.exc_info()
-                self.log.error('Exception type: %s. Exception message: %s', exc_type, exc_value)
 
                 if 'RemoteDisconnected' in str(exc_value) and retries:
                     retries -= 1
@@ -134,6 +133,7 @@ class Salt(object):
                     )
                     time.sleep(5)
                 else:
+                    self.log.error('Exception type: %s. Exception message: %s', exc_type, exc_value)
                     exit(1)
 
     def login(self, eauth=None):
@@ -161,11 +161,11 @@ class Salt(object):
             self.log.debug('Authentication succeed.')
             return ret.content
         except Exception:
-            self.log.error('Error: Unable to connect to salt-api at `%s`. Return code: %s', ret.url, ret.status_code)
-            exit(1)
+            self.log.debug('Unable to connect to salt-api at `%s`. Return code: %s', ret.url, ret.status_code)
+            raise
 
-    def execute(self, fun, client=None, target=None, tgt_type=None, args=None, kwargs=None, pillar=None, run_async=False,
-                async_wait=False, output='dict', returner=None):
+    def execute(self, fun, client=None, target=None, tgt_type=None, args=None, kwargs=None, pillar=None,
+                run_async=False, async_wait=False, output='dict', returner=None):
         """
         Executes a function using the salt API.
 
