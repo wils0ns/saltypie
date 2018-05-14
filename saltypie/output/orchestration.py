@@ -178,14 +178,15 @@ class OrchestrationOutput(BaseOutput):
         for _, orch in self.parsed_data.items():
             for step in orch['data']:
                 for step_name, step_data in step.items():
+                    step_duration = step_data.get('duration', 0)
                     plot_bar, percentage = self._plot_duration(
-                        duration=step_data['duration'],
+                        duration=step_duration,
                         total_duration=orch['total_duration'],
                         max_bar_size=max_bar_size
                     )
 
                     _id = self.extract_id(step_name)
-                    duration = self.format_time(step_data['duration'], unit=time_unit)
+                    duration = self.format_time(step_duration, unit=time_unit)
 
                     line = (_id, plot_bar, percentage, duration, step_data['result'])
                     if step_data['result']:
