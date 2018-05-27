@@ -204,4 +204,4 @@ class OrchestrationOutput(BaseOutput):
 
     def detailed_table(self):
         pass
-    
+
