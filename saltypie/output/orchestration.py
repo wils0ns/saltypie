@@ -158,6 +158,22 @@ class OrchestrationOutput(BaseOutput):
         """
         return OrchestrationOutput.get_step_type(key) == 'state'
 
+    def get_state_outputs(self):
+        """Returns a list of all state output objects present on the orchestration.
+
+        Returns:
+            list: List of dictionaries with two keys: step and data.
+        """
+
+        outputs = []
+        for _, orch in self.parsed_data.items():
+            for step in orch['data']:
+                for step_name, step_data in step.items():
+                    _id = self.extract_id(step_name)
+                    if isinstance(step_data['changes'], StateOutput):
+                        outputs.append({'step': _id, 'data': step_data['changes']})
+        return outputs
+
     def summary_table(self, max_bar_size=30, time_unit='s', show_minions=False):
         """Returns a table listing the orchestration steps and information about its duration and result.
 
