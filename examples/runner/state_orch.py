@@ -24,11 +24,12 @@ def main():
         async_wait=True
     )
 
-    # print(json.dumps(ret, indent=4))
+    # print(json.dumps(ret, indent=2))
 
-    orchout = OrchestrationOutput(ret, salt)    
-    print(orchout.summary_table(max_bar_size=100, time_unit='s'))
-    # # print(json.dumps(orchout.data, indent=4))
-    print(json.dumps(orchout.parse_data(dict_only=True), indent=4))
+    orchout = OrchestrationOutput(ret, salt)
+    # orchout.safe = False
+    print(orchout.summary_table(max_bar_size=100, time_unit='s', show_minions=True))
+    # print(json.dumps(orchout.data, indent=2))
+    # print(json.dumps(orchout.parse_data(dict_only=True), indent=4))
 
 main()

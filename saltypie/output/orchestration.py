@@ -2,10 +2,8 @@
 # -*- coding: utf-8 -*-
 """Salt orchestration output parser"""
 
-import json
 from collections import OrderedDict
-from colorclass import Color, Windows
-from terminaltables import AsciiTable, SingleTable
+from colorclass import Color
 
 from saltypie.output import BaseOutput, StateOutput
 
@@ -160,7 +158,7 @@ class OrchestrationOutput(BaseOutput):
         """
         return OrchestrationOutput.get_step_type(key) == 'state'
 
-    def summary_table(self, max_bar_size=30, time_unit='s'):
+    def summary_table(self, max_bar_size=30, time_unit='s', show_minions=False):
         """Returns a table listing the orchestration steps and information about its duration and result.
 
         Args:
@@ -194,6 +192,24 @@ class OrchestrationOutput(BaseOutput):
                     else:
                         table_data.append([Color.red(item, auto=True) for item in line])
 
+                    if show_minions:
+                        branch = "├─ " if not self.safe else "|-- "
+                        if isinstance(step_data['changes'], StateOutput):
+                            for minion in step_data['changes']:
+                                for minion_id, minion_data in minion.items():
+                                    line = (branch + minion_id, '', '', '', minion_data['failed_states'] == [])
+                                    if not minion_data['failed_states']:
+                                        table_data.append([Color.cyan(item, auto=True) for item in line])
+                                    else:
+                                        table_data.append([Color.red(item, auto=True) for item in line])
+                        elif self.is_salt_function(step_name):
+                            for minion_id in step_data['changes']['ret']:
+                                line = (branch + minion_id, '', '', '', '')
+                                if step_data['result']:
+                                    table_data.append([Color.cyan(item, auto=True) for item in line])
+                                else:
+                                    table_data.append([Color.red(item, auto=True) for item in line])
+
             table_data.append([
                 'Total elapsed time: {}'.format(
                     self.format_duration(orch['total_duration'])
@@ -203,5 +219,6 @@ class OrchestrationOutput(BaseOutput):
         return self._create_table(data=table_data, title='Orchestration')
 
     def detailed_table(self):
+        """[summary]
+        """
         pass
-
