@@ -111,12 +111,15 @@ class OrchestrationOutput(BaseOutput):
             for key, data in _orch.items():
                 ret[master]['total_duration'] += data.get('duration', 0)
                 if self.is_salt_state(key):
-                    data = self.normalize_state(data)
-                    state_output = StateOutput(data['changes'])
-                    if dict_only:
-                        data['changes'] = state_output.data
-                    else:
-                        data['changes'] = state_output
+                    try:
+                        data = self.normalize_state(data)
+                        state_output = StateOutput(data['changes'])
+                        if dict_only:
+                            data['changes'] = state_output.data
+                        else:
+                            data['changes'] = state_output
+                    except KeyError:
+                        self.log.debug('Unable to normalize data. Leaving as is.')
 
                 ret[master]['data'].append({key: data})
         return ret
