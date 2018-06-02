@@ -51,11 +51,12 @@ class StateOutput(BaseOutput):
 
     def summary(self, *args, **kwargs):
         """Alias for StateOutput.parse_data to support backwards compatibility.
-        Warning: This method might be removed in the future. Use `StateOutput.parse_data()` instead.
 
         See:
             StateOutput.parse_data
         """
+        self.log.warning('Warning: `StateOutput.summary()` method might be removed in the future.'
+                         'Use `StateOutput.parse_data()` instead.')
         return self.parse_data(*args, **kwargs)
 
     def parse_data(self, max_chars=None):
@@ -106,7 +107,7 @@ class StateOutput(BaseOutput):
 
         return ret
 
-    def tables(self, failed_only=False, max_chars=None, max_bar_size=30):
+    def tables(self, failed_only=False, max_chars=None, max_bar_size=30, time_unit='ms'):
         """Creates a list of tables representing the state run including a more graphical
         representation of the duration.
 
@@ -134,7 +135,7 @@ class StateOutput(BaseOutput):
                 self.log.debug('No state results found. Skipping `%s`', minion_id)
                 continue
 
-            table_data = [['State', 'Plot', '%', 'ms', 'Result']]
+            table_data = [['State', 'Plot', '%', 'Time({})'.format(time_unit), 'Result']]
             for state in data[minion_id][states]:
 
                 plot_bar, percentage = self._plot_duration(
@@ -147,7 +148,7 @@ class StateOutput(BaseOutput):
                     state['id'],
                     plot_bar,
                     percentage,
-                    state['duration'],
+                    self.format_time(state['duration'], time_unit),
                     state['result']
                 )
 
@@ -171,11 +172,12 @@ class StateOutput(BaseOutput):
 
     def graphs(self, *args, **kwargs):
         """Alias for StateOutput.tables to support backwards compatibility.
-        Warning: This method might be removed in the future. Use `StateOutput.tables()` instead.
 
         See:
             StateOutput.tables
         """
+        self.log.warning('Warning: `StateOutput.graphs()` method might be removed in the future. '
+                         'Use `StateOutput.tables()` instead.')
         return self.tables(*args, **kwargs)
 
     def __str__(self):
