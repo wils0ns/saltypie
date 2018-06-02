@@ -178,7 +178,6 @@ class StateOutput(BaseOutput):
         """
         return self.tables(*args, **kwargs)
 
-
     def __str__(self):
         ret = ''
         for table in self.tables():
@@ -187,3 +186,8 @@ class StateOutput(BaseOutput):
 
     def __repr__(self):
         return json.dumps(self.data)
+
+    def __iter__(self):
+        for minion_id, data in self.parse_data().items():
+            minion_data = {minion_id: data}
+            yield minion_data
