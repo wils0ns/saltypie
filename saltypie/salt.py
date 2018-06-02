@@ -161,7 +161,9 @@ class Salt(object):
             self.log.debug('Authentication succeed.')
             return ret.content
         except Exception:
-            self.log.debug('Unable to connect to salt-api at `%s`. Return code: %s', ret.url, ret.status_code)
+            self.log.error('Unable to connect to salt-api at `%s`. Return code: %s', ret.url, ret.status_code)
+            if ret.status_code == 503:
+                self.log.error('Ensure that the salt-master services is running.')
             raise
 
     def execute(self, fun, client=None, target=None, tgt_type=None, args=None, kwargs=None, pillar=None,

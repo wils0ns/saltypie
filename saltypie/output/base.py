@@ -117,8 +117,7 @@ class BaseOutput(object):
         elif unit == 'min':
             formatted_value = value / 3600000
         elif unit == 'ms':
-            self.log.error('Unsupported unit %s', unit)
-            exit(1)
+            return value
         return '{0:>5.2f}'.format(formatted_value)
 
     def _create_table(self, data, title=None):
