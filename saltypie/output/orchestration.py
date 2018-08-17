@@ -222,7 +222,7 @@ class OrchestrationOutput(BaseOutput):
                                     else:
                                         table_data.append([Color.red(item, auto=True) for item in line])
                         elif self.is_salt_function(step_name):
-                            for minion_id in step_data['changes']['ret']:
+                            for minion_id in step_data['changes'].get('ret', []):
                                 line = (branch + minion_id, '', '', '', '')
                                 if step_data['result']:
                                     table_data.append([Color.cyan(item, auto=True) for item in line])
