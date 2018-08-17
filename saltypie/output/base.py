@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 """Base output handler"""
 import sys
 import logging
