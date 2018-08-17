@@ -35,7 +35,12 @@ class BaseOutput(object):
         Returns:
             str: The description of the execution
         """
-        return key.split('_|-')[1]
+
+        try:
+            _id = key.split('_|-')[1]
+        except IndexError:
+            _id = key
+        return _id
 
     def ordered_result(self, result):
         """Returns an ordered dictionary of the execution result
