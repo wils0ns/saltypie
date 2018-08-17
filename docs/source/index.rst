@@ -12,6 +12,7 @@ saltypie's documentation!
 
    salt
    state_output
+   orch_output
 
 Indices and tables
 ==================
