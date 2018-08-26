@@ -239,7 +239,7 @@ class Salt(object):
         elif output == Salt.OUTPUT_RAW:
             return ret.content
         elif output == Salt.OUTPUT_JSON:
-            return str(ret.content)
+            return ret.json()
 
         return json.loads(ret.content)
 
