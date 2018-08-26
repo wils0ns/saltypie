@@ -21,7 +21,7 @@ pages:
     paths:
       - public
   only:
-    - tags
+    - master
 
 publish to pypi:
   stage: deploy
