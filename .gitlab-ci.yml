@@ -8,7 +8,7 @@ run pylint:
     - pip install -e .
     - python tests/run_pylint.py
 
-create docs page:
+pages:
   stage: deploy
   script:
     - apk --no-cache add $(cat apk-requirements.txt)
