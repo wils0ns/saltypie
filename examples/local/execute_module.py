@@ -13,10 +13,11 @@ def main():
     )
     salt.eauth = 'pam'
 
-    ret = salt.local(
+    ret = salt.local_async(
         target='local-cm',
         fun='test.arg',
-        kwargs={'a': 1, 'b': 2}
+        kwargs={'a': 1, 'b': 2},
+        wait=True
     )
     print(ret)
 

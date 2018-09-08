@@ -249,8 +249,14 @@ class Salt(object):
     def runner(self, *args, **kwargs):
         return self.execute(client=Salt.CLIENT_RUNNER, *args, **kwargs)
     
+    def runner_async(self, wait=False, *args, **kwargs):
+        return self.runner(run_async=True, async_wait=wait, *args, **kwargs)
+
     def local(self, *args, **kwargs):
         return self.execute(client=Salt.CLIENT_LOCAL, *args, **kwargs)
+
+    def local_async(self, wait=False, *args, **kwargs):
+        return self.local(run_async=True, async_wait=wait, *args, **kwargs)
 
     def lookup_job(self, jid, until_complete=False, interval=None, output='dict'):
         """

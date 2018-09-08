@@ -17,11 +17,11 @@ def main():
     )
     salt.eauth = 'pam'
 
-    ret = salt.runner(
+    ret = salt.runner_async(
         fun='state.orch',
         args=['orch_fail'],
         pillar={'sleep': 1},
-        async_wait=True
+        wait=True
     )
 
     # print(json.dumps(ret, indent=2))
