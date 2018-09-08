@@ -13,8 +13,7 @@ def main():
     )
     salt.eauth = 'pam'
 
-    ret = salt.execute(
-        client=Salt.CLIENT_LOCAL,
+    ret = salt.local(
         target='local-cm',
         fun='test.arg',
         kwargs={'a': 1, 'b': 2}

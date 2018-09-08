@@ -17,8 +17,7 @@ def main():
     )
     salt.eauth = 'pam'
 
-    ret = salt.execute(
-        client=Salt.CLIENT_RUNNER,
+    ret = salt.runner(
         fun='state.orch',
         args=['orch_fail'],
         pillar={'sleep': 1},

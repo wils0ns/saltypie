@@ -243,6 +243,15 @@ class Salt(object):
 
         return json.loads(ret.content)
 
+    def wheel(self, *args, **kwargs):
+        return self.execute(client=Salt.CLIENT_WHEEL, *args, **kwargs)
+
+    def runner(self, *args, **kwargs):
+        return self.execute(client=Salt.CLIENT_RUNNER, *args, **kwargs)
+    
+    def local(self, *args, **kwargs):
+        return self.execute(client=Salt.CLIENT_LOCAL, *args, **kwargs)
+
     def lookup_job(self, jid, until_complete=False, interval=None, output='dict'):
         """
         Retrieves information about a saltstack job.
