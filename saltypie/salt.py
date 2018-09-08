@@ -243,6 +243,62 @@ class Salt(object):
 
         return json.loads(ret.content)
 
+    def wheel(self, *args, **kwargs):
+        """
+        Used to send wheel commands to the salt master.
+        
+        See:
+            Salt.execute method.
+        """
+
+        return self.execute(client=Salt.CLIENT_WHEEL, *args, **kwargs)
+
+    def runner(self, *args, **kwargs):
+        """
+        Used to send commands to be executed by the salt master.
+        
+        See:
+            Salt.execute method.
+        """
+
+        return self.execute(client=Salt.CLIENT_RUNNER, *args, **kwargs)
+    
+    def runner_async(self, wait=False, *args, **kwargs):
+        """
+        Used to send commands to be executed by the salt master asynchronously.
+
+        Args:
+            wait (bool, optional): Defaults to False. Whether or not to pool for the job until completed.
+        
+        See:
+            Salt.execute method.
+        """
+
+        return self.runner(run_async=True, async_wait=wait, *args, **kwargs)
+
+    def local(self, *args, **kwargs):
+        """
+        Used to send commands to be exected by salt minions.
+        
+        See:
+            Salt.execute method.
+        """
+
+        return self.execute(client=Salt.CLIENT_LOCAL, *args, **kwargs)
+
+    def local_async(self, wait=False, *args, **kwargs):
+        """
+        Used to send commands to be executed by salt minions asynchronously.
+
+        Args:
+            wait (bool, optional): Defaults to False. Whether or not to pool for the job until completed.
+        
+        See:
+            Salt.execute method.
+        """
+
+        return self.local(run_async=True, async_wait=wait, *args, **kwargs)
+
     def lookup_job(self, jid, until_complete=False, interval=None, output='dict'):
         """
         Retrieves information about a saltstack job.

@@ -1,0 +1,42 @@
+{
+    "local": {
+        "test_|-test succeed without changes_|-test succeed without changes_|-succeed_without_changes": {
+            "comment": "Success!", 
+            "name": "test succeed without changes", 
+            "start_time": "22:01:01.380934", 
+            "result": true, 
+            "duration": 0.304, 
+            "__run_num__": 1, 
+            "__sls__": "test.succeed_without_changes", 
+            "changes": {}, 
+            "__id__": "test succeed without changes"
+        }, 
+        "test_|-test succeed with changes_|-test succeed with changes_|-succeed_with_changes": {
+            "comment": "Success!", 
+            "name": "test succeed with changes", 
+            "start_time": "22:01:01.380458", 
+            "result": true, 
+            "duration": 0.354, 
+            "__run_num__": 0, 
+            "__sls__": "test.succeed_with_changes", 
+            "changes": {
+                "testing": {
+                    "new": "Something pretended to change", 
+                    "old": "Unchanged"
+                }
+            }, 
+            "__id__": "test succeed with changes"
+        }, 
+        "test_|-test no operation_|-test no operation_|-nop": {
+            "comment": "Success!", 
+            "name": "test no operation", 
+            "start_time": "22:01:01.381332", 
+            "result": true, 
+            "duration": 0.4, 
+            "__run_num__": 2, 
+            "__sls__": "test.nop", 
+            "changes": {}, 
+            "__id__": "test no operation"
+        }
+    }
+}

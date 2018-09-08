@@ -35,6 +35,13 @@ class StateOutput(BaseOutput):
         ordered = {}
 
         self.log.debug('Ordering state runs...')
+
+        if not 'return' in result:
+            self.log.debug('`return` key not found. Assuming salt-call output...')
+            result = dict({
+                'return': [result]
+            })
+
         for minions in result['return']:
             for minion_id in minions:
                 states = minions[minion_id]
