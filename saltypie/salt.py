@@ -277,9 +277,26 @@ class Salt(object):
         return self.runner(run_async=True, async_wait=wait, *args, **kwargs)
 
     def local(self, *args, **kwargs):
+        """
+        Used to send commands to be exected by salt minions.
+        
+        See:
+            Salt.execute method.
+        """
+
         return self.execute(client=Salt.CLIENT_LOCAL, *args, **kwargs)
 
     def local_async(self, wait=False, *args, **kwargs):
+        """
+        Used to send commands to be executed by salt minions asynchronously.
+
+        Args:
+            wait (bool, optional): Defaults to False. Whether or not to pool for the job until completed.
+        
+        See:
+            Salt.execute method.
+        """
+
         return self.local(run_async=True, async_wait=wait, *args, **kwargs)
 
     def lookup_job(self, jid, until_complete=False, interval=None, output='dict'):
