@@ -124,6 +124,13 @@ class OrchestrationOutput(BaseOutput):
                 ret[master]['data'].append({key: data})
         return ret
 
+    def get_step_names(self):
+        steps = list()
+        for master, _orch in self.data.items():
+            for key, data in _orch.items():
+                steps.append(self.extract_id(key))
+        return steps
+
     @staticmethod
     def get_step_type(key):
         """Returns the orcherstration step type based on its key.

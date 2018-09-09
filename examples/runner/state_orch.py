@@ -36,6 +36,7 @@ def main():
             print(table)
 
     # print(json.dumps(orchout.data, indent=2))
+    # print(orchout.get_step_names())
     # print(json.dumps(orchout.parse_data(dict_only=True), indent=4))
 
 main()
