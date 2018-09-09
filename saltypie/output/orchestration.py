@@ -125,6 +125,13 @@ class OrchestrationOutput(BaseOutput):
         return ret
 
     def get_step_names(self):
+        """
+        List orchestration step names.
+        
+        Returns:
+            list
+        """
+
         steps = list()
         for master, _orch in self.data.items():
             for key, data in _orch.items():
