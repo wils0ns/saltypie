@@ -21,6 +21,11 @@ from requests.packages.urllib3.exceptions import InsecureRequestWarning
 from requests.packages.urllib3.util.retry import Retry
 
 
+class SaltReturnParseError(Exception):
+    """Raised when saltypie is unable to parse the returned content of an API call."""
+    pass
+
+
 class Salt(object):
     """
     Salt's Rest API handler
@@ -230,23 +235,44 @@ class Salt(object):
 
         self.log.debug('Executing salt command: %s', data)
         ret = self.post(data)
+        try:
+            content_dict = json.loads(ret.content)
+        except json.decoder.JSONDecodeError as exc:
+            msg = 'Error: Unable to parse API return as JSON: {}. Returned code:{}. Returned content: {}'.format(
+                exc, ret.status_code, ret.content)
+            self.log.error(msg)
+            raise SaltReturnParseError(msg)
+
         if async_wait:
-            return self.lookup_job(json.loads(ret.content)['return'][0]['jid'], until_complete=True, output=output)
-        elif run_async:
-            return json.loads(ret.content)
-        elif output == Salt.OUTPUT_DICT:
-            return json.loads(ret.content)
-        elif output == Salt.OUTPUT_RAW:
+            try:
+                jid = content_dict['return'][0]['jid']
+                return self.lookup_job(jid, until_complete=True, output=output)
+            except KeyError as exc:
+                self.log.debug(exc)
+                self.log.debug('Unable to retrieve JID. Assuming no jobs were executed.')
+                if target:
+                    self.log.debug('Targeting might have matched no minion.')
+                return dict()
+
+        # if run_async:
+        #     return json.loads(ret.content)
+
+        # if output == Salt.OUTPUT_DICT:
+        #     return json.loads(ret.content)
+
+        if output == Salt.OUTPUT_RAW:
             return ret.content
-        elif output == Salt.OUTPUT_JSON:
+
+        if output == Salt.OUTPUT_JSON:
             return ret.json()
 
-        return json.loads(ret.content)
+        return content_dict
+
 
     def wheel(self, *args, **kwargs):
         """
         Used to send wheel commands to the salt master.
-        
+
         See:
             Salt.execute method.
         """
@@ -256,20 +282,20 @@ class Salt(object):
     def runner(self, *args, **kwargs):
         """
         Used to send commands to be executed by the salt master.
-        
+
         See:
             Salt.execute method.
         """
 
         return self.execute(client=Salt.CLIENT_RUNNER, *args, **kwargs)
-    
+
     def runner_async(self, wait=False, *args, **kwargs):
         """
         Used to send commands to be executed by the salt master asynchronously.
 
         Args:
             wait (bool, optional): Defaults to False. Whether or not to pool for the job until completed.
-        
+
         See:
             Salt.execute method.
         """
@@ -279,7 +305,7 @@ class Salt(object):
     def local(self, *args, **kwargs):
         """
         Used to send commands to be exected by salt minions.
-        
+
         See:
             Salt.execute method.
         """
@@ -292,7 +318,7 @@ class Salt(object):
 
         Args:
             wait (bool, optional): Defaults to False. Whether or not to pool for the job until completed.
-        
+
         See:
             Salt.execute method.
         """
