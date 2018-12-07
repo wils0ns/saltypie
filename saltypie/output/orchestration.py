@@ -106,10 +106,15 @@ class OrchestrationOutput(BaseOutput):
             ret[master] = {
                 'data': [],
                 'total_duration': 0,
+                'failed_steps': []
             }
 
             for key, data in _orch.items():
                 ret[master]['total_duration'] += data.get('duration', 0)
+
+                if data.get('result') is False:
+                    ret[master]['failed_steps'].append(key)
+
                 if self.is_salt_state(key):
                     try:
                         data = self.normalize_state(data)
@@ -124,17 +129,30 @@ class OrchestrationOutput(BaseOutput):
                 ret[master]['data'].append({key: data})
         return ret
 
+    @property
+    def failed_steps(self):
+        """List of all the failed steps in the orchestration.
+
+        Returns:
+            list
+        """
+
+        steps = []
+        for data in self.parsed_data.values():
+            steps.extend(data['failed_steps'])
+        return steps
+
     def get_step_names(self):
         """
         List orchestration step names.
-        
+
         Returns:
             list
         """
 
         steps = list()
-        for master, _orch in self.data.items():
-            for key, data in _orch.items():
+        for _, _orch in self.data.items():
+            for key, _ in _orch.items():
                 steps.append(self.extract_id(key))
         return steps
 
