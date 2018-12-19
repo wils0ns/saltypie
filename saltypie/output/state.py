@@ -7,7 +7,6 @@ import json
 from collections import OrderedDict
 import colorama
 from colorclass import Color, Windows
-from terminaltables import AsciiTable, SingleTable
 
 from saltypie.output.base import BaseOutput
 
