@@ -52,7 +52,7 @@ class StateOutput(BaseOutput):
                     self.log.error('Error: Unable to sort state results for %s minion', minion_id)
                     self.log.error('%s: %s', type(exc), exc)
                     self.log.error('State results: \n%s', json.dumps(result, indent=2))
-                    exit(1)
+                    raise
 
         return ordered
 
