@@ -149,3 +149,16 @@ class BaseOutput(object):
         table.inner_footing_row_border = True
 
         return table.table
+
+    def set_color(self, color_method, items):
+        """Sets a terminal color for all items in a list
+
+        Args:
+            color_method: A color method from the Color class to be used to format the list items.
+            items (list): A list of items to be colored.
+        Returns:
+            list
+        """
+        if self.colored:
+            return [color_method(item, auto=True) for item in items]
+        return items

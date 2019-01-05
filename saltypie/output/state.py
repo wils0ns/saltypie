@@ -158,13 +158,10 @@ class StateOutput(BaseOutput):
                     state['result']
                 )
 
-                if self.colored:
-                    if state['result']:
-                        table_data.append([Color.cyan(item, auto=True) for item in line])
-                    else:
-                        table_data.append([Color.red(item, auto=True) for item in line])
+                if state['result']:
+                    table_data.append(self.set_color(Color.cyan, line))
                 else:
-                    table_data.append([item for item in line])
+                    table_data.append(self.set_color(Color.red, line))
 
             table_data.append([
                 'Total elapsed time: {}'.format(
