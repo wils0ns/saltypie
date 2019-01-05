@@ -239,9 +239,9 @@ class OrchestrationOutput(BaseOutput):
 
                     line = (_id, plot_bar, percentage, duration, step_data['result'])
                     if step_data['result']:
-                        table_data.append([Color.cyan(item, auto=True) for item in line])
+                        table_data.append(self.set_color(Color.cyan, line))
                     else:
-                        table_data.append([Color.red(item, auto=True) for item in line])
+                        table_data.append(self.set_color(Color.red, line))
 
                     if show_minions:
                         branch = "├─ " if not self.safe else "|-- "
@@ -250,16 +250,16 @@ class OrchestrationOutput(BaseOutput):
                                 for minion_id, minion_data in minion.items():
                                     line = (branch + minion_id, '', '', '', minion_data['failed_states'] == [])
                                     if not minion_data['failed_states']:
-                                        table_data.append([Color.cyan(item, auto=True) for item in line])
+                                        table_data.append(self.set_color(Color.cyan, line))
                                     else:
-                                        table_data.append([Color.red(item, auto=True) for item in line])
+                                        table_data.append(self.set_color(Color.red, line))
                         elif self.is_salt_function(step_name):
                             for minion_id in step_data['changes'].get('ret', []):
                                 line = (branch + minion_id, '', '', '', '')
                                 if step_data['result']:
-                                    table_data.append([Color.cyan(item, auto=True) for item in line])
+                                    table_data.append(self.set_color(Color.cyan, line))
                                 else:
-                                    table_data.append([Color.red(item, auto=True) for item in line])
+                                    table_data.append(self.set_color(Color.red, line))
 
             table_data.append([
                 'Total elapsed time: {}'.format(
