@@ -8,8 +8,8 @@ THIS_FOLDER = path.abspath(path.dirname(__file__))
 with open(path.join(THIS_FOLDER, '.version')) as f:
     VERSION = f.read()
 
-# Get long description from README.rst file
-with open(path.join(THIS_FOLDER, 'README.rst'), encoding='utf-8') as f:
+# Get long description from README file
+with open(path.join(THIS_FOLDER, 'README.md'), encoding='utf-8') as f:
     README = f.read()
 
 setup(

@@ -96,6 +96,12 @@ Output:
    +--------------------------------------------------------------------------------+
 
 
+Terminal safe mode
+==================
+
+All output classes have the `safe` property that is set to False if the terminal encoding is dectected to be *utf-8*
+
+
 More examples
 =============
 
