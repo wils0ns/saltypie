@@ -20,6 +20,7 @@ setup(
     url='https://gitlab.com/cathaldallan/saltypie',
     description='Saltypie - salt-api wrapper and return parser',
     long_description=README,
+    long_description_content_type="text/markdown",
     license='MIT',
     keywords='saltstack salt salt-api wrapper',
     classifiers=[
