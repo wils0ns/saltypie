@@ -1,8 +1,11 @@
 import logging
+import json
 from saltypie import Salt
+from saltypie.output import OrchestrationOutput
 
 LOG = logging.getLogger()
 logging.basicConfig(level=logging.DEBUG)
+
 
 def main():
     salt = Salt(
@@ -13,12 +16,12 @@ def main():
     )
     salt.eauth = 'pam'
 
-    ret = salt.local_async(
-        target='*',
-        fun='test.arg',
-        kwargs={'a': 1, 'b': 2},
+    ret = salt.runner_async(
+        fun='test.sleep',
+        args=[10],
         wait=True
     )
-    print(ret)
+
+    print(json.dumps(ret, indent=2))
 
 main()
