@@ -9,6 +9,8 @@ import sys
 import json
 import logging
 import time
+from datetime import datetime
+
 try:
     from urlparse import urljoin
 except ImportError:
@@ -53,6 +55,7 @@ class Salt(object):
         self.eauth = eauth
         self.trust_host = trust_host
         self.token = None
+        self.token_expire = 0
         self.timeout = 60
         self.session = self._new_session()
         self.lookup_interval = 1
@@ -141,6 +144,19 @@ class Salt(object):
                     self.log.error('Exception type: %s. Exception message: %s', exc_type, exc_value)
                     exit(1)
 
+    @property
+    def token_is_expired(self):
+        """
+        Checks if the token expiration date has been reached
+
+        Returns:
+            bool
+        """
+        now = datetime.now().timestamp()
+        self.log.debug('time delta: %s', self.token_expire - now)
+        if not self.token or self.token_expire < now:
+            return True
+
     def login(self, eauth=None):
         """
         Creates an authenticated session with a salt API server
@@ -162,8 +178,13 @@ class Salt(object):
         try:
             ret = self.post(path='login', data=data)
             self.token = ret.json()['return'][0]['token']
+            self.token_expire = ret.json()['return'][0]['expire']
             self.session.headers.update({'X-Auth-Token': self.token})
+
             self.log.debug('Authentication succeed.')
+            date_string = datetime.fromtimestamp(self.token_expire).strftime("%Y-%m-%d %H:%M:%S")
+            self.log.debug('Session token will expire on `%s`', date_string)
+
             return ret.content
         except Exception:
             self.log.error('Unable to connect to salt-api at `%s`. Return code: %s', ret.url, ret.status_code)
@@ -201,7 +222,7 @@ class Salt(object):
             str, dict: Depends on the format passed to the `output` parameter.
         """
 
-        if not self.token:
+        if self.token_is_expired:
             self.login()
 
         client = client or Salt.CLIENT_LOCAL

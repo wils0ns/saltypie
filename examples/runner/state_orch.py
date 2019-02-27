@@ -9,10 +9,9 @@ logging.basicConfig(level=logging.DEBUG)
 
 def main():
     salt = Salt(
-        url='https://192.168.70.10:8000',
-        # url='https://192.168.70.11:8000',
-        username='saltapiuser',
-        passwd='abc123',
+        url='https://localhost:8000',
+        username='admin',
+        passwd='admin',
         trust_host=True
     )
     salt.eauth = 'pam'
