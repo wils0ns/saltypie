@@ -14,7 +14,7 @@ class OrchestrationOutput(BaseOutput):
     Args:
         ret (dict): The return object of a `state.orch` execution.
         salt (Salt): saltypie's Salt object for connecting to the master where the orchestration
-            was executed from. A bug on salt's orcherstration return object prevents it from been
+            was executed from. A bug on salt's orchestration return object prevents it from been
             parsed as a full qualified JSON object when one of its state execution steps fails
     """
 
@@ -158,7 +158,7 @@ class OrchestrationOutput(BaseOutput):
 
     @staticmethod
     def get_step_type(key):
-        """Returns the orcherstration step type based on its key.
+        """Returns the orchestration step type based on its key.
 
         Args:
             key ([str): An orchestration step key.
@@ -217,6 +217,7 @@ class OrchestrationOutput(BaseOutput):
                 of the execution time.
             time_unit (str, optional): Defaults to 's'. Step duration unit.
                 ms: milliseconds, s: seconds or min: minutes.
+            show_minions (bool): Whether or not to display the minions that executed a step in the orchestration.
 
         Returns:
             str: A console printable table representation of the orchestration.
@@ -235,7 +236,7 @@ class OrchestrationOutput(BaseOutput):
                     )
 
                     _id = self.extract_id(step_name)
-                    duration = self.format_time(step_duration, unit=time_unit)
+                    duration = BaseOutput.format_time(step_duration, unit=time_unit)
 
                     line = (_id, plot_bar, percentage, duration, step_data['result'])
                     if step_data['result']:
