@@ -39,7 +39,7 @@ class StateOutput(BaseOutput):
 
         self.log.debug('Ordering state runs...')
 
-        if not 'return' in result:
+        if 'return' not in result:
             self.log.debug('`return` key not found. Assuming salt-call output...')
             result = dict({
                 'return': [result]
@@ -126,7 +126,7 @@ class StateOutput(BaseOutput):
             max_chars (int): Maximum number of characters to display for state ID.
                 If the ID is greater then `max_chars` ellipsis(...) will be added.
             max_bar_size (int): Size of the bar plot equivalent to 100% of the execution time.
-
+            time_unit (str): Which time init to present state durations (ms, s, min)
         Returns:
             list
         """
@@ -158,7 +158,7 @@ class StateOutput(BaseOutput):
                     state['id'],
                     plot_bar,
                     percentage,
-                    self.format_time(state['duration'], time_unit),
+                    BaseOutput.format_time(state['duration'], time_unit),
                     state['result']
                 )
 
