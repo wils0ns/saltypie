@@ -22,6 +22,10 @@ except AttributeError:
 class StateOutput(BaseOutput):
     """Output handler for salt state return objects"""
 
+    def __init__(self, ret):
+        super(StateOutput, self).__init__(ret)
+        self.parsed_data = self.parse_data()
+
     def ordered_result(self, result):
         """Order states by run number
 
