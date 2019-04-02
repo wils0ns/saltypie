@@ -40,7 +40,7 @@ class OrchestrationOutput(BaseOutput):
             data = result['return'][0]['data']
         except KeyError:
             self.log.debug('Unable to retrieve orchestration data.'
-                           ' Attemping job lookup return object format...')
+                           ' Assuming `job lookup return format`...')
             data = list(result['return'][0].values())[0]['return']['data']
             self.log.debug('Data retrieved.')
 
