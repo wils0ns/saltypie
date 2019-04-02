@@ -105,7 +105,8 @@ class BaseOutput(object):
 
         return plot_bar, '{0:>5.2f}%'.format(percentage)
 
-    def format_time(self, value, unit):
+    @staticmethod
+    def format_time(value, unit):
         """Converts milliseconds to the specified unit.
 
         Args:
@@ -155,7 +156,7 @@ class BaseOutput(object):
 
         Args:
             color_method: A color method from the Color class to be used to format the list items.
-            items (list): A list of items to be colored.
+            items: A list of items to be colored.
         Returns:
             list
         """
