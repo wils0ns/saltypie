@@ -23,9 +23,7 @@ from requests.packages.urllib3.exceptions import InsecureRequestWarning
 from requests.packages.urllib3.util.retry import Retry
 
 
-class SaltReturnParseError(Exception):
-    """Raised when saltypie is unable to parse the returned content of an API call."""
-    pass
+from saltypie.exceptions import SaltConnectionError, SaltAuthenticationError, SaltReturnParseError
 
 
 class Salt(object):
@@ -57,9 +55,9 @@ class Salt(object):
         self.token = None
         self.token_expire = 0
         self.timeout = 60
-        self.session = self._new_session()
+        self.max_retries = 3
         self.lookup_interval = 1
-        self.max_retries_if_aborted = 3
+        self.session = self._new_session()
 
         self.log = logging.getLogger(__name__)
 
@@ -72,7 +70,7 @@ class Salt(object):
         """
         session = requests.Session()
         session.verify = not self.trust_host
-        retries = Retry(total=3, backoff_factor=5)
+        retries = Retry(total=self.max_retries, backoff_factor=5)
         session.mount(self.url, HTTPAdapter(max_retries=retries))
         return session
 
@@ -100,7 +98,7 @@ class Salt(object):
             return ret
         except Exception as exc:
             self.log.error(exc)
-            exit(1)
+            raise
 
     def post(self, data, path='', headers=None, timeout=None):
         """
@@ -118,8 +116,8 @@ class Salt(object):
         if not self.session.verify:
             requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
 
-        retries = self.max_retries_if_aborted or 1
-
+        retry = 0
+        remote_disconnect_exc = None
         while True:
             try:
                 ret = self.session.post(
@@ -129,20 +127,23 @@ class Salt(object):
                     timeout=timeout or self.timeout
                 )
                 return ret
-            except Exception:
-                exc_type, exc_value, _ = sys.exc_info()
-
-                if 'RemoteDisconnected' in str(exc_value) and retries:
-                    retries -= 1
-                    self.log.warning(
-                        'Execution failed because of connection abortion. Remaining retries: %s out of %s...',
-                        retries,
-                        self.max_retries_if_aborted
-                    )
-                    time.sleep(5)
-                else:
-                    self.log.error('Exception type: %s. Exception message: %s', exc_type, exc_value)
-                    exit(1)
+            except requests.exceptions.ConnectionError as exc:
+                if 'RemoteDisconnected' in str(exc):
+                    remote_disconnect_exc = exc
+                    self.log.debug('Connection lost: %s', exc)
+                    if retry <= self.max_retries:
+                        retry += 1
+                        self.log.debug('Sleeping for %s seconds and retrying (%s/%s)',
+                                       self.timeout,
+                                       retry,
+                                       self.max_retries)
+                        time.sleep(self.timeout)
+                        continue
+                raise SaltConnectionError('Unable to access `{}`.'.format(self.url), exc, remote_disconnect_exc)
+            except requests.exceptions.ReadTimeout as exc:
+                raise SaltConnectionError('Unable to read response from server due to connection timeout.', exc)
+            except Exception as exc:
+                raise
 
     @property
     def token_is_expired(self):
@@ -153,7 +154,10 @@ class Salt(object):
             bool
         """
         now = datetime.now().timestamp()
-        self.log.debug('time delta: %s', self.token_expire - now)
+
+        if self.token_expire:
+            self.log.debug('Time until authentication token expires:: %s', self.token_expire - now)
+
         if not self.token or self.token_expire < now:
             return True
 
@@ -175,8 +179,11 @@ class Salt(object):
             'eauth': eauth
         }
 
+        ret = self.post(path='login', data=data)
+        if ret.status_code == 401:
+            raise SaltAuthenticationError('Unable to authenticate to salt-api using proved credentials.')
+
         try:
-            ret = self.post(path='login', data=data)
             self.token = ret.json()['return'][0]['token']
             self.token_expire = ret.json()['return'][0]['expire']
             self.session.headers.update({'X-Auth-Token': self.token})
@@ -187,10 +194,11 @@ class Salt(object):
 
             return ret.content
         except Exception:
-            self.log.error('Unable to connect to salt-api at `%s`. Return code: %s', ret.url, ret.status_code)
+            msg = 'Unable to connect to salt-api at `{}`. Return code: {}'.format(ret.url, ret.status_code)
+
             if ret.status_code == 503:
-                self.log.error('Ensure that the salt-master services is running.')
-            raise
+                msg += '. Ensure that the salt-master services is running.'
+            raise SaltAuthenticationError(msg)
 
     def execute(self, fun, client=None, target=None, tgt_type=None, args=None, kwargs=None, pillar=None,
                 run_async=False, async_wait=False, output='dict', returner=None):
@@ -259,9 +267,8 @@ class Salt(object):
         try:
             content_dict = json.loads(ret.content)
         except json.decoder.JSONDecodeError as exc:
-            msg = 'Error: Unable to parse API return as JSON: {}. Returned code:{}. Returned content: {}'.format(
+            msg = 'Unable to parse API return as JSON: {}. Returned code:{}. Returned content: {}'.format(
                 exc, ret.status_code, ret.content)
-            self.log.error(msg)
             raise SaltReturnParseError(msg)
 
         if async_wait:
@@ -272,7 +279,7 @@ class Salt(object):
                 self.log.debug(exc)
                 self.log.debug('Unable to retrieve JID. Assuming no jobs were executed.')
                 if target:
-                    self.log.debug('Targeting might have matched no minion.')
+                    self.log.debug('Targeting might have matched no minions.')
                 return dict()
 
         # if run_async:
@@ -288,7 +295,6 @@ class Salt(object):
             return ret.json()
 
         return content_dict
-
 
     def wheel(self, *args, **kwargs):
         """
@@ -325,7 +331,7 @@ class Salt(object):
 
     def local(self, *args, **kwargs):
         """
-        Used to send commands to be exected by salt minions.
+        Used to send commands to be executed by salt minions.
 
         See:
             Salt.execute method.
@@ -348,7 +354,7 @@ class Salt(object):
 
     def lookup_job(self, jid, until_complete=False, interval=None, output='dict'):
         """
-        Retrieves information about a saltstack job.
+        Retrieves information about a SaltStack job.
 
         Args:
             jid (int): The job ID.
