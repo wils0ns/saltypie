@@ -366,8 +366,6 @@ class Salt(object):
         Returns:
             dict: a dictionary containing the job results
         """
-        if not self.token:
-            self.login()
 
         ret = self.execute(client=Salt.CLIENT_RUNNER, fun='jobs.lookup_jid', kwargs={'jid': jid}, output=output)
 
