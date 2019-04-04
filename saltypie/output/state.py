@@ -9,6 +9,7 @@ import colorama
 from colorclass import Color, Windows
 
 from saltypie.output.base import BaseOutput
+from saltypie.exceptions import SaltReturnParseError, SaltSLSRenderingError
 
 colorama.init()
 
@@ -26,6 +27,12 @@ class StateOutput(BaseOutput):
         super(StateOutput, self).__init__(ret)
         self.parsed_data = self.parse_data()
 
+    @staticmethod
+    def _has_outputter(result):
+        """"""
+        if 'outputter' in result['return'][0] and isinstance(result['return'][0]['outputter'], str):
+            return True
+
     def ordered_result(self, result):
         """Order states by run number
 
@@ -37,22 +44,35 @@ class StateOutput(BaseOutput):
         """
         ordered = {}
 
-        self.log.debug('Ordering state runs...')
+        self.log.debug('Sorting state results...')
+
+        if not result:
+            self.log.debug('Result object is empty. Nothing to do.')
+            return ordered
 
         if 'return' not in result:
-            self.log.debug('`return` key not found. Assuming salt-call output...')
+            self.log.debug('`return` key not found. Assuming salt-call return object.')
             result = dict({
                 'return': [result]
             })
 
+        if StateOutput._has_outputter(result):
+            self.log.debug('`outputter` key found. Assuming minion data within `data` object.')
+            result = dict({
+                'return': [result['return'][0]['data']]
+            })
+
         for minions in result['return']:
             for minion_id in minions:
+                self.log.debug('Sorting results for `%s` minion', minion_id)
                 states = minions[minion_id]
+                if isinstance(states, list) and 'Rendering SLS' in states[0]:
+                    raise SaltSLSRenderingError('Minion: `{}`. Error: {}'.format(minion_id, states[0]))
                 try:
                     ordered[minion_id] = OrderedDict(
                         sorted(states.items(), key=lambda k: k[1]['__run_num__']))
                 except Exception as exc:
-                    self.log.error('Error: Unable to sort state results for %s minion', minion_id)
+                    self.log.error('Error: Unable to sort state results for `%s` minion', minion_id)
                     self.log.error('%s: %s', type(exc), exc)
                     self.log.debug('State results: \n%s', json.dumps(result, indent=2))
                     raise

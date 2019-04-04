@@ -12,3 +12,7 @@ class SaltReturnParseError(Exception):
     """Raised when saltypie is unable to parse the returned content of an API call."""
     pass
 
+
+class SaltSLSRenderingError(SaltReturnParseError):
+    """Raised when saltypie is unable to parse the returned content of an API call due to SLS rendering error"""
+    pass
