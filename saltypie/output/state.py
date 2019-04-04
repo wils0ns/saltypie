@@ -9,7 +9,7 @@ import colorama
 from colorclass import Color, Windows
 
 from saltypie.output.base import BaseOutput
-from saltypie.exceptions import SaltReturnParseError, SaltSLSRenderingError
+from saltypie.exceptions import SaltReturnParseError, SaltSLSRenderingError, SaltInvalidStateReturnError
 
 colorama.init()
 
@@ -66,8 +66,13 @@ class StateOutput(BaseOutput):
             for minion_id in minions:
                 self.log.debug('Sorting results for `%s` minion', minion_id)
                 states = minions[minion_id]
+
                 if isinstance(states, list) and 'Rendering SLS' in states[0]:
                     raise SaltSLSRenderingError('Minion: `{}`. Error: {}'.format(minion_id, states[0]))
+
+                if not isinstance(states, dict):
+                    raise SaltInvalidStateReturnError('Result object is not a valid state return.', result)
+
                 try:
                     ordered[minion_id] = OrderedDict(
                         sorted(states.items(), key=lambda k: k[1]['__run_num__']))
@@ -75,7 +80,7 @@ class StateOutput(BaseOutput):
                     self.log.error('Error: Unable to sort state results for `%s` minion', minion_id)
                     self.log.error('%s: %s', type(exc), exc)
                     self.log.debug('State results: \n%s', json.dumps(result, indent=2))
-                    raise
+                    raise SaltReturnParseError(exc)
 
         return ordered
 

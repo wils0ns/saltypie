@@ -16,3 +16,8 @@ class SaltReturnParseError(Exception):
 class SaltSLSRenderingError(SaltReturnParseError):
     """Raised when saltypie is unable to parse the returned content of an API call due to SLS rendering error"""
     pass
+
+
+class SaltInvalidStateReturnError(SaltReturnParseError):
+    """Raised when the return object is not from a state run and, therefore, can not be parsed by StateOutput class"""
+    pass
