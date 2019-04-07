@@ -5,3 +5,4 @@ dist
 *.pyc
 docs/build/
 venv
+samples/private

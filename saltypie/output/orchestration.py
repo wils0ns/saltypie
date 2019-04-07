@@ -6,6 +6,7 @@ from collections import OrderedDict
 from colorclass import Color
 
 from saltypie.output import BaseOutput, StateOutput
+from saltypie.exceptions import SaltReturnParseError
 
 
 class OrchestrationOutput(BaseOutput):
@@ -14,7 +15,7 @@ class OrchestrationOutput(BaseOutput):
     Args:
         ret (dict): The return object of a `state.orch` execution.
         salt (Salt): saltypie's Salt object for connecting to the master where the orchestration
-            was executed from. A bug on salt's orcherstration return object prevents it from been
+            was executed from. A bug on salt's orchestration return object prevents it from been
             parsed as a full qualified JSON object when one of its state execution steps fails
     """
 
@@ -34,13 +35,13 @@ class OrchestrationOutput(BaseOutput):
         """
         ordered = {}
 
-        self.log.debug('Ordering orchestration output...')
+        self.log.debug('Sorting orchestration output...')
 
         try:
             data = result['return'][0]['data']
         except KeyError:
             self.log.debug('Unable to retrieve orchestration data.'
-                           ' Attemping job lookup return object format...')
+                           ' Assuming `Salt.lookup_job` return format...')
             data = list(result['return'][0].values())[0]['return']['data']
             self.log.debug('Data retrieved.')
 
@@ -49,10 +50,9 @@ class OrchestrationOutput(BaseOutput):
                 ordered[master] = OrderedDict(
                     sorted(_orch.items(), key=lambda k: k[1]['__run_num__']))
         except Exception as exc:
-            self.log.error('Error: Unable to sort orchestration results')
-            self.log.error('%s: %s', type(exc), exc)
-            self.log.debug('Orchestration results: \n%s', result)
-            raise
+            msg = 'Unable to sort orchestration results Error: {}, {}'.format(type(exc), exc)
+            msg += '\nOrchestration results: \n{}'.format(result)
+            raise SaltReturnParseError(msg)
 
         return ordered
 
@@ -83,8 +83,8 @@ class OrchestrationOutput(BaseOutput):
                 state_return = self.salt.lookup_job(state_data['__jid__'])
                 state_data['changes'] = state_return
             else:
-                self.log.error(
-                    'Error: Unable to fetch data from failed state: `%s`. Salt object not provided.',
+                self.log.debug(
+                    'Unable to fetch data for state in failed step: `%s`. Salt object not provided.',
                     self.extract_id(state_data.get('__id__'))
                 )
 
@@ -158,7 +158,7 @@ class OrchestrationOutput(BaseOutput):
 
     @staticmethod
     def get_step_type(key):
-        """Returns the orcherstration step type based on its key.
+        """Returns the orchestration step type based on its key.
 
         Args:
             key ([str): An orchestration step key.
@@ -183,7 +183,7 @@ class OrchestrationOutput(BaseOutput):
 
     @staticmethod
     def is_salt_state(key):
-        """Checks whether or not an orcherstration step is a salt state execution.
+        """Checks whether or not an orchestration step is a salt state execution.
 
         Args:
             key (str): An orchestration step key
@@ -217,6 +217,7 @@ class OrchestrationOutput(BaseOutput):
                 of the execution time.
             time_unit (str, optional): Defaults to 's'. Step duration unit.
                 ms: milliseconds, s: seconds or min: minutes.
+            show_minions (bool): Whether or not to display the minions that executed a step in the orchestration.
 
         Returns:
             str: A console printable table representation of the orchestration.
@@ -235,7 +236,7 @@ class OrchestrationOutput(BaseOutput):
                     )
 
                     _id = self.extract_id(step_name)
-                    duration = self.format_time(step_duration, unit=time_unit)
+                    duration = BaseOutput.format_time(step_duration, unit=time_unit)
 
                     line = (_id, plot_bar, percentage, duration, step_data['result'])
                     if step_data['result']:
