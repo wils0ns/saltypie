@@ -19,7 +19,7 @@ import os
 # -- Project information -----------------------------------------------------
 
 project = 'saltypie'
-copyright = '2018, Wilson Santos'
+copyright = '2019, Wilson Santos'
 author = 'Wilson Santos'
 
 # The short X.Y version
