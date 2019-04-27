@@ -1,4 +1,4 @@
-# Saltypie - salt-api wrapper and state return parser.
+# Saltypie - salt-api client and state return parser.
 
 
 
