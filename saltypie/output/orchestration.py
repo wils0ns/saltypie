@@ -74,19 +74,19 @@ class OrchestrationOutput(BaseOutput):
 
         state_data = dict(state_data)
 
-        if state_data['changes']:
+        if not state_data['result']:
+            if self.salt:
+                self.log.debug(
+                    'State data for `%s` might be incomplete, fetching job `%s` from salt-master...',
+                    state_data.get('__id__'),
+                    state_data['__jid__']
+                )
+                state_return = self.salt.lookup_job(state_data['__jid__'])
+                state_data['changes'] = state_return
+        else:
             state_data['changes'] = {
                 'return': [state_data['changes']['ret']]
             }
-        else:
-            if self.salt:
-                state_return = self.salt.lookup_job(state_data['__jid__'])
-                state_data['changes'] = state_return
-            else:
-                self.log.debug(
-                    'Unable to fetch data for state in failed step: `%s`. Salt object not provided.',
-                    self.extract_id(state_data.get('__id__'))
-                )
 
         return state_data
 

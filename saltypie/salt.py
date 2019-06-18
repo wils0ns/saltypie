@@ -155,9 +155,6 @@ class Salt(object):
         """
         now = datetime.now().timestamp()
 
-        if self.token_expire:
-            self.log.debug('Time until authentication token expires:: %s', self.token_expire - now)
-
         if not self.token or self.token_expire < now:
             return True
 
