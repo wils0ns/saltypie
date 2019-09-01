@@ -132,7 +132,8 @@ class StateOutput(BaseOutput):
                     'id': state_name,
                     'duration': state_data.get('duration', 0),
                     'result': state_data['result'],
-                    'changes': state_data['changes'] != {}
+                    'changes': state_data['changes'] != {},
+                    'comment': state_data['comment']
                 }
                 ret[minion_id]['raw_states'].append(state_data)
                 ret[minion_id]['states'].append(filtered_data)
