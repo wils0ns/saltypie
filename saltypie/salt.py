@@ -262,7 +262,7 @@ class Salt(object):
         self.log.debug('Executing salt command: %s', data)
         ret = self.post(data)
         try:
-            content_dict = json.loads(ret.content)
+            content_dict = json.loads(ret.content.decode())
         except json.decoder.JSONDecodeError as exc:
             msg = 'Unable to parse API return as JSON: {}. Returned code:{}. Returned content: {}'.format(
                 exc, ret.status_code, ret.content)
@@ -278,12 +278,6 @@ class Salt(object):
                 if target:
                     self.log.debug('Targeting might have matched no minions.')
                 return dict()
-
-        # if run_async:
-        #     return json.loads(ret.content)
-
-        # if output == Salt.OUTPUT_DICT:
-        #     return json.loads(ret.content)
 
         if output == Salt.OUTPUT_RAW:
             return ret.content
